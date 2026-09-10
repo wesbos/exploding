@@ -54,6 +54,8 @@ h1 span { display: block; color: #919797; margin-top: 7px; font-size: 17px; lett
 .assembly-toggle, .explore, .show-all { min-height: 38px; border: 1px solid #61685e; font-size: 10px; }
 .assembly-toggle { padding: 9px 15px; background: #cbd6b3; color: #1d2520; border-color: #cbd6b3; }
 .explore { padding: 9px 11px; border-color: #ffffff26; background: transparent; color: #c1c8c6; }
+.knoll-toggle { width: 100%; min-height: 40px; margin-top: 7px; padding: 9px 11px; border: 1px solid #ffffff26; color: #c1c8c6; background: transparent; font-size: 10px; }
+.knoll-toggle[aria-pressed=true] { background: #cedbb510; border-color: #cedbb55c; color: #d7e3c1; }
 .parts-heading { display: flex; justify-content: space-between; padding: 20px 0 10px; font-size: 8px; }
 .parts-list { display: grid; gap: 1px; }
 .part-button { display: grid; grid-template-columns: 23px 1fr 12px; gap: 7px; align-items: center; width: 100%; min-height: 33px; border: 1px solid transparent; padding: 6px 7px; color: #b5bcba; background: transparent; text-align: left; font-size: 11px; }

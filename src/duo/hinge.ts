@@ -231,6 +231,7 @@ export function createHinge(materials: DuoMaterials): {
   setFold: (degrees: number) => void
   setExplosion: (amount: number) => void
   setFinish: (finish: DuoFinish) => void
+  setColor: (color: string) => void
 } {
   const m = materials
   const parts: DuoPart[] = []
@@ -481,5 +482,5 @@ export function createHinge(materials: DuoMaterials): {
 
   setFold(180)
   setExplosion(0)
-  return { parts, setFold, setExplosion, setFinish }
+  return { parts, setFold, setExplosion, setFinish, setColor(color: string) { blastedTitanium.color.set(color) } }
 }

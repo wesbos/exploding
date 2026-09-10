@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { canvasTexture, randomSource } from './geometry'
 import { DUO, foldRadians, type DuoFinish, type DuoPart } from './types'
+import { createWallpaperLibrary, drawLockScreen, type WallpaperId } from '../wallpapers'
 
 export function wallpaper(finish: DuoFinish, cover = false) {
   const night = finish === 'night'
@@ -62,18 +63,7 @@ export function wallpaper(finish: DuoFinish, cover = false) {
       ctx.stroke()
     }
     ctx.restore()
-    if (cover) {
-      ctx.fillStyle = '#f0f2ed'
-      ctx.textAlign = 'center'
-      ctx.font = '300 96px system-ui, sans-serif'
-      ctx.fillText('9:41', 768, 223)
-      ctx.font = '24px system-ui, sans-serif'
-      ctx.fillText('Wednesday, September 9', 768, 273)
-      ctx.fillStyle = 'rgba(240,245,248,0.8)'
-      ctx.beginPath()
-      ctx.roundRect(627, 1045, 282, 7, 4)
-      ctx.fill()
-    }
+    if (cover) drawLockScreen(ctx)
   })
 }
 
@@ -113,7 +103,8 @@ export function createFoldingDisplay() {
     map: maps.white, emissiveMap: maps.white, emissive: 0xffffff, emissiveIntensity: 0.45,
     color: 0xffffff, metalness: 0.08, roughness: 0.5, clearcoat: 0.25, clearcoatRoughness: 0.45,
   })
-  const surface = new THREE.Mesh(geometry, material)
+  const appMaterial = new THREE.MeshBasicMaterial({ toneMapped: false })
+  const surface = new THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial | THREE.MeshBasicMaterial>(geometry, material)
   group.add(surface)
   const backingGeometry = geometry.clone()
   const backing = new THREE.Mesh(backingGeometry, new THREE.MeshStandardMaterial({
@@ -124,6 +115,9 @@ export function createFoldingDisplay() {
   let lastAngle = -1
   let enabled = true
   let finish: DuoFinish = 'white'
+  const customWallpapers = createWallpaperLibrary()
+  let selectedWallpaper: WallpaperId = 'original'
+  let appTexture: THREE.Texture | null = null
 
   function deform(target: THREE.BufferGeometry, angle: number, z: number) {
     const phi = foldRadians(angle)
@@ -158,8 +152,12 @@ export function createFoldingDisplay() {
     deform(backingGeometry, angle, 0.249)
   }
   function updateScreen() {
-    material.map = enabled ? maps[finish] : null
-    material.emissiveMap = enabled ? maps[finish] : null
+    surface.material = enabled && appTexture ? appMaterial : material
+    appMaterial.map = appTexture
+    appMaterial.needsUpdate = true
+    const background = customWallpapers(selectedWallpaper) ?? maps[finish]
+    material.map = enabled ? appTexture ?? background : null
+    material.emissiveMap = enabled ? appTexture ?? background : null
     material.emissiveIntensity = enabled ? 0.45 : 0
     material.color.setHex(enabled ? 0xffffff : 0x06090d)
     material.needsUpdate = true
@@ -172,8 +170,25 @@ export function createFoldingDisplay() {
   }
   return {
     part,
+    surface,
     setFold,
+    setAppTexture(texture: THREE.Texture) { appTexture = texture; updateScreen() },
+    // Map each flat half's DOM pixels to the deformed display, before projection.
+    pixelTransform(left: boolean, width: number, height: number) {
+      const pixels = new THREE.Matrix4().set(
+        DUO.innerWidth / width, 0, 0, -DUO.innerWidth / 2,
+        0, -DUO.innerHeight / height, 0, DUO.innerHeight / 2,
+        0, 0, 1, 0.26,
+        0, 0, 0, 1,
+      )
+      if (!left) return pixels
+      return new THREE.Matrix4().makeTranslation(0, 0, DUO.pivotZ)
+        .multiply(new THREE.Matrix4().makeRotationY(foldRadians(lastAngle)))
+        .multiply(new THREE.Matrix4().makeTranslation(0, 0, -DUO.pivotZ))
+        .multiply(pixels)
+    },
     setFinish(value: DuoFinish) { finish = value; updateScreen() },
+    setWallpaper(value: WallpaperId) { selectedWallpaper = value; updateScreen() },
     setScreen(value: boolean) { enabled = value; updateScreen() },
   }
 }

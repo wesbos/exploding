@@ -2,13 +2,16 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import { createPhone, finishes, type Finish } from './phone'
+import { createKnollingLayout } from './knolling'
+import { setupNavigation } from './navigation'
+import { setupAppearance } from './appearance'
 import './style.css'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <main class="viewer">
     <header class="topbar">
       <a class="brand" href="/" aria-label="Phoneform home"><span class="brand-mark"></span> PHONEFORM <span class="brand-divider">/</span> LAB</a>
-      <nav class="model-switch" aria-label="Device model"><a href="?model=15" aria-current="page">15 Pro</a><a href="?model=duo">iPhone Duo ↗</a></nav>
+      <nav class="model-switch" aria-label="Device model"><a href="/">iPhone Duo</a><a href="?model=15" aria-current="page">15 Pro</a></nav>
       <button class="menu" type="button" aria-label="Show reference information" aria-expanded="false" aria-controls="object-info"><i></i><i></i></button>
       <aside id="object-info" hidden>
         <strong>Built from the inside out.</strong>
@@ -33,6 +36,8 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
             <button class="assembly-toggle" type="button">Assemble</button>
             <button class="explore" type="button">Reverse view ↗</button>
           </div>
+          <button class="knoll-toggle" type="button" aria-pressed="false">Knolling grid</button>
+          <div id="appearance"></div>
         </div>
         <div class="parts-heading"><span>COMPONENT INDEX</span><span id="part-count"></span></div>
         <div class="parts-list" role="group" aria-label="Inspect an individual component"></div>
@@ -41,7 +46,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div class="model-stage">
         <div class="stage-meta"><span id="view-title">EXPLODED ASSEMBLY</span><span class="live-dot">LIVE 3D</span></div>
         <div id="scene" aria-label="Interactive 3D iPhone teardown"></div>
-        <div class="part-caption" aria-live="polite"><span id="caption-number">001 / 015 PRO</span><h2 id="caption-title">Every part has a purpose.</h2><p id="caption-detail">Drag to orbit. Scroll to zoom. Click a component to inspect it on its own.</p></div>
+        <div class="part-caption" aria-live="polite"><span id="caption-number">001 / 015 PRO</span><h2 id="caption-title">Every part has a purpose.</h2><p id="caption-detail">Drag to orbit. Middle-drag or Space + drag to pan. Scroll to zoom. Click a component to inspect it on its own.</p></div>
         <div class="stage-tools">
           <button class="shell-toggle" type="button" aria-pressed="false">Hide outer layers</button>
           <button class="reset-view" type="button">Reset view ↺</button>
@@ -71,7 +76,7 @@ renderer.toneMappingExposure = 1.06
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.domElement.tabIndex = 0
-renderer.domElement.setAttribute('aria-label', '3D iPhone components. Drag or use arrow keys to rotate, scroll to zoom, R to reset, Escape for the full assembly.')
+renderer.domElement.setAttribute('aria-label', '3D iPhone components. Drag or use arrow keys to rotate, middle-drag or Space and drag to pan, scroll to zoom, R to reset, Escape for the full assembly.')
 host.appendChild(renderer.domElement)
 
 const pmrem = new THREE.PMREMGenerator(renderer)
@@ -85,12 +90,25 @@ pmrem.dispose()
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = !reducedMotion.matches
-controls.enablePan = false
+const navigation = setupNavigation(controls, renderer.domElement)
 controls.minDistance = 0.8
 controls.maxDistance = 55
 controls.minPolarAngle = 0.12
 controls.maxPolarAngle = Math.PI - 0.12
-const { phone, parts, setFinish, setExplosion } = createPhone()
+const { phone, parts, setFinish, setExplosion, setColor, setWallpaper } = createPhone()
+const appearance = setupAppearance({
+  color: '#8c877f',
+  onColor(color) {
+    setColor(color)
+    document.querySelectorAll('.swatch').forEach(button => {
+      button.classList.remove('active')
+      button.setAttribute('aria-pressed', 'false')
+    })
+  },
+  onWallpaper: setWallpaper,
+})
+setExplosion(0)
+const knollLayout = createKnollingLayout(parts, ['rear-glass', 'cameras', 'magsafe'])
 phone.rotation.set(0.2, -0.65, -0.07)
 scene.add(phone)
 phone.traverse(object => {
@@ -124,11 +142,14 @@ let explosion = 1
 let explosionTarget = 1
 let selection: string | null = null
 let hideShell = false
+let knolling = false
+let knollAmount = 0
 let transition: { from: THREE.Vector3; to: THREE.Vector3; fromTarget: THREE.Vector3; toTarget: THREE.Vector3; elapsed: number } | null = null
 const separation = document.querySelector<HTMLInputElement>('#explosion')!
 const separationValue = document.querySelector<HTMLOutputElement>('#explosion-value')!
 const assemblyToggle = document.querySelector<HTMLButtonElement>('.assembly-toggle')!
 const shellToggle = document.querySelector<HTMLButtonElement>('.shell-toggle')!
+const knollToggle = document.querySelector<HTMLButtonElement>('.knoll-toggle')!
 const captionTitle = document.querySelector<HTMLElement>('#caption-title')!
 const captionDetail = document.querySelector<HTMLElement>('#caption-detail')!
 const viewTitle = document.querySelector<HTMLElement>('#view-title')!
@@ -162,10 +183,28 @@ function applyVisibility() {
   }
 }
 
+function applyLayout(value: number, amount: number) {
+  knollLayout.restore()
+  setExplosion(value)
+  knollLayout.apply(amount, camera.aspect)
+}
+
+function setKnolling(value: boolean) {
+  knolling = value
+  knollToggle.setAttribute('aria-pressed', String(value))
+  document.querySelector<HTMLButtonElement>('.explore')!.disabled = value
+  shellToggle.disabled = value || selection !== null
+  phone.rotation.set(value ? 0 : 0.2, value ? 0 : frontView ? -0.65 : Math.PI - 0.65, value ? 0 : -0.07)
+}
+
 function frameModel(animate = true) {
   // Compute the destination pose, then restore the animated pose. Invisible
   // assemblies must not contribute to an isolated component's framing.
-  setExplosion(explosionTarget)
+  const damping = controls.enableDamping
+  controls.enableDamping = false
+  controls.update()
+  controls.enableDamping = damping
+  applyLayout(explosionTarget, knolling ? 1 : 0)
   phone.updateMatrixWorld(true)
   const bounds = new THREE.Box3()
   for (const part of parts) if (part.group.visible) bounds.union(new THREE.Box3().setFromObject(part.group))
@@ -174,7 +213,10 @@ function frameModel(animate = true) {
   const halfFov = THREE.MathUtils.degToRad(camera.fov / 2)
   const distance = Math.max(size.y / 2 / Math.tan(halfFov), size.x / 2 / (Math.tan(halfFov) * camera.aspect)) * 1.17 + size.z / 2
   const position = center.clone().add(new THREE.Vector3(0, 0, Math.max(1.5, distance)))
-  setExplosion(explosion)
+  controls.maxDistance = Math.max(55, distance * 2)
+  camera.far = Math.max(150, distance * 4)
+  camera.updateProjectionMatrix()
+  applyLayout(explosion, knollAmount)
   if (animate && !reducedMotion.matches) {
     transition = { from: camera.position.clone(), to: position, fromTarget: controls.target.clone(), toTarget: center, elapsed: 0 }
   } else {
@@ -192,24 +234,34 @@ function selectPart(id: string | null) {
     button.setAttribute('aria-pressed', String(button.dataset.part === id))
   })
   document.querySelector('.show-all')!.setAttribute('aria-pressed', String(id === null))
-  captionTitle.textContent = selected?.name ?? 'Every part has a purpose.'
-  captionDetail.textContent = selected?.detail ?? 'Drag to orbit. Scroll to zoom. Click a component to inspect it on its own.'
+  captionTitle.textContent = selected?.name ?? (knolling ? 'Every component, in its place.' : 'Every part has a purpose.')
+  captionDetail.textContent = selected?.detail ?? (knolling ? 'All components at their original scale, laid flat in an aligned grid. Middle-drag or Space + drag to pan. Select one to inspect it, or turn off Knolling grid to return to the exploded view.' : 'Drag to orbit. Middle-drag or Space + drag to pan. Scroll to zoom. Click a component to inspect it on its own.')
   document.querySelector('#caption-number')!.textContent = selected
     ? `${String(parts.indexOf(selected) + 1).padStart(2, '0')} / COMPONENT STUDY` : '001 / 015 PRO'
-  viewTitle.textContent = selected ? 'ISOLATED COMPONENT' : explosionTarget > 0 ? 'EXPLODED ASSEMBLY' : 'ASSEMBLED DEVICE'
-  shellToggle.disabled = id !== null
+  viewTitle.textContent = selected ? 'ISOLATED COMPONENT' : knolling ? 'KNOLLING GRID' : explosionTarget > 0 ? 'EXPLODED ASSEMBLY' : 'ASSEMBLED DEVICE'
+  shellToggle.disabled = knolling || id !== null
   frameModel()
 }
 document.querySelector('.show-all')!.addEventListener('click', () => selectPart(null))
 
 function updateExplosion(value: number) {
+  setKnolling(false)
   explosionTarget = value / 100
   separation.value = String(value)
   separationValue.value = `${value}%`
   assemblyToggle.textContent = value > 0 ? 'Assemble' : 'Explode'
-  if (!selection) viewTitle.textContent = value > 0 ? 'EXPLODED ASSEMBLY' : 'ASSEMBLED DEVICE'
-  frameModel()
+  selectPart(selection)
 }
+knollToggle.addEventListener('click', () => {
+  setKnolling(!knolling)
+  hideShell = false
+  updateShell()
+  explosionTarget = 1
+  separation.value = '100'
+  separationValue.value = '100%'
+  assemblyToggle.textContent = 'Assemble'
+  selectPart(null)
+})
 separation.addEventListener('input', () => updateExplosion(separation.valueAsNumber))
 assemblyToggle.addEventListener('click', () => {
   if (selection) selectPart(null)
@@ -233,7 +285,7 @@ function resetView(front = true) {
   const damping = controls.enableDamping
   controls.enableDamping = false
   controls.update()
-  phone.rotation.set(0.2, front ? -0.65 : Math.PI - 0.65, -0.07)
+  phone.rotation.set(knolling ? 0 : 0.2, knolling ? 0 : front ? -0.65 : Math.PI - 0.65, knolling ? 0 : -0.07)
   controls.enableDamping = damping
   frameModel()
 }
@@ -266,7 +318,9 @@ renderer.domElement.addEventListener('keydown', event => {
 const raycaster = new THREE.Raycaster()
 const pointer = new THREE.Vector2()
 let pointerStart: { x: number; y: number } | null = null
-renderer.domElement.addEventListener('pointerdown', event => { pointerStart = { x: event.clientX, y: event.clientY } })
+renderer.domElement.addEventListener('pointerdown', event => {
+  pointerStart = navigation.canSelect(event) ? { x: event.clientX, y: event.clientY } : null
+})
 renderer.domElement.addEventListener('pointercancel', () => { pointerStart = null })
 renderer.domElement.addEventListener('pointerup', event => {
   if (!pointerStart || Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 5) {
@@ -286,6 +340,7 @@ document.querySelectorAll<HTMLButtonElement>('.swatch').forEach(button => {
     const value = button.dataset.color
     if (!value || !Object.hasOwn(finishes, value)) throw new Error(`Unknown finish: ${value}`)
     setFinish(value as Finish)
+    appearance.setColor(`#${finishes[value as Finish].back.toString(16).padStart(6, '0')}`)
     document.querySelectorAll<HTMLButtonElement>('.swatch').forEach(swatch => {
       swatch.classList.toggle('active', swatch === button)
       swatch.setAttribute('aria-pressed', String(swatch === button))
@@ -322,7 +377,7 @@ function resize() {
   renderer.setSize(width, height)
   frameModel(false)
 }
-setExplosion(explosion)
+applyLayout(explosion, knollAmount)
 const resizeObserver = new ResizeObserver(resize)
 resizeObserver.observe(host)
 resize()
@@ -331,7 +386,11 @@ renderer.setAnimationLoop(() => {
   const delta = Math.min(clock.getDelta(), 0.05)
   if (document.hidden) return
   explosion = reducedMotion.matches ? explosionTarget : THREE.MathUtils.damp(explosion, explosionTarget, 9, delta)
-  setExplosion(explosion)
+  const knollTarget = knolling ? 1 : 0
+  knollAmount = reducedMotion.matches ? knollTarget : THREE.MathUtils.damp(knollAmount, knollTarget, 9, delta)
+  if (Math.abs(knollAmount - knollTarget) < 0.0005) knollAmount = knollTarget
+  applyLayout(explosion, knollAmount)
+  host.dataset.knolling = knollAmount.toFixed(3)
   if (transition) {
     transition.elapsed += delta
     const t = THREE.MathUtils.smoothstep(transition.elapsed, 0, 0.55)

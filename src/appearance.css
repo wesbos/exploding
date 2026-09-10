@@ -1,0 +1,10 @@
+.appearance { margin-top: 16px; padding-top: 13px; border-top: 1px solid #ffffff17; }
+.appearance summary { color: #bccab3; cursor: pointer; font-size: 11px; }
+.appearance .appearance-color { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; font: 11px 'Space Grotesk', sans-serif; color: #a7b5ac; }
+.appearance input[type=color] { width: 54px; height: 36px; padding: 3px; border: 1px solid #ffffff30; border-radius: 4px; background: transparent; cursor: pointer; }
+.appearance-label { margin: 14px 0 9px; font: 8px 'DM Mono', monospace; letter-spacing: .06em; color: #a6b5ac; }
+.wallpaper-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.wallpaper-options button { min-width: 0; padding: 5px; border: 1px solid #ffffff20; border-radius: 4px; background: transparent; color: #a7b5ac; font-size: 9px; }
+.wallpaper-options button span { display: block; height: 35px; margin-bottom: 5px; border-radius: 2px; }
+.wallpaper-options button[aria-pressed=true] { border-color: #c4d8ad; color: #e0edcf; background: #c4d8ad10; }
+.wallpaper-options button:hover { border-color: #c4d8ad80; }

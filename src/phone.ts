@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { createInternals, type InternalPart } from './internals'
+import { createWallpaperLibrary, type WallpaperId } from './wallpapers'
 
 export const finishes = {
   black: { name: 'Natural titanium', rim: 0x99938b, back: 0x8c877f },
@@ -262,6 +263,12 @@ export function createPhone() {
     color: 0x06090d, roughness: 0.13, metalness: 0.35, clearcoat: 1, clearcoatRoughness: 0.06,
   })
   const screen = face(roundedRect(2.81, 6.11, 0.335), displayGlass)
+  const screenPositions = screen.geometry.getAttribute('position')
+  const screenUVs = screen.geometry.getAttribute('uv')
+  for (let i = 0; i < screenPositions.count; i++) {
+    screenUVs.setXY(i, screenPositions.getX(i) / 2.81 + 0.5, screenPositions.getY(i) / 6.11 + 0.5)
+  }
+  const customWallpapers = createWallpaperLibrary(true)
   screen.position.z = 0.185
   display.add(screen)
   panel(display, 0.84, 0.225, 0.003, black, 0, 2.775, 0.19, 0.112)
@@ -416,6 +423,25 @@ export function createPhone() {
     setFinish(finish: Finish) {
       rim.color.setHex(finishes[finish].rim)
       backGlass.color.setHex(finishes[finish].back)
+    },
+    setColor(value: string) {
+      rim.color.set(value)
+      backGlass.color.set(value)
+    },
+    setWallpaper(value: WallpaperId) {
+      const background = customWallpapers(value)
+      if (background) {
+        const crop = (2.81 / 6.11) / (1536 / 1080)
+        background.repeat.set(crop, 1)
+        background.offset.set((1 - crop) / 2, 0)
+      }
+      displayGlass.map = background
+      displayGlass.emissiveMap = background
+      displayGlass.color.setHex(background ? 0xffffff : 0x06090d)
+      displayGlass.emissive.setHex(background ? 0xffffff : 0x000000)
+      displayGlass.emissiveIntensity = background ? 0.45 : 0
+      displayGlass.metalness = background ? 0.06 : 0.35
+      displayGlass.needsUpdate = true
     },
   }
 }

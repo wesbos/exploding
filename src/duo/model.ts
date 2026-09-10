@@ -4,6 +4,7 @@ import { createFoldingDisplay, wallpaper } from './display'
 import { createDuoInternals } from './internals'
 import { createHinge } from './hinge'
 import { DUO, chassisOffset, foldRadians, type DuoFinish, type DuoPart, type DuoPose, type DuoSide } from './types'
+import { createWallpaperLibrary, type WallpaperId } from '../wallpapers'
 
 function halfShape(side: 'left' | 'right', inset = 0) {
   const w = DUO.halfWidth / 2 - inset
@@ -239,6 +240,8 @@ export function createDuo() {
     else phone.add(part.group)
   }
   let finish: DuoFinish = 'white'
+  const customWallpapers = createWallpaperLibrary(true)
+  let selectedWallpaper: WallpaperId = 'original'
   let screenOn = true
   let previousFold = -1
   let previousExplosion = -1
@@ -258,8 +261,11 @@ export function createDuo() {
     }
   }
   function updateCover() {
-    coverMaterial.map = screenOn ? coverMaps[finish] : null
-    coverMaterial.emissiveMap = screenOn ? coverMaps[finish] : null
+    const background = customWallpapers(selectedWallpaper) ?? coverMaps[finish]
+    background.repeat.set(0.48, 1)
+    background.offset.set(0.26, 0)
+    coverMaterial.map = screenOn ? background : null
+    coverMaterial.emissiveMap = screenOn ? background : null
     coverMaterial.emissiveIntensity = screenOn ? 0.45 : 0
     coverMaterial.color.setHex(screenOn ? 0xffffff : 0x05080b)
     coverMaterial.needsUpdate = true
@@ -268,7 +274,19 @@ export function createDuo() {
   return {
     phone,
     parts,
+    display,
     setPose,
+    setColor(value: string) {
+      m.titanium.color.set(value)
+      backMaterial.color.set(value)
+      logoMaterial.color.set(value).multiplyScalar(0.65)
+      hinge.setColor(value)
+    },
+    setWallpaper(value: WallpaperId) {
+      selectedWallpaper = value
+      display.setWallpaper(value)
+      updateCover()
+    },
     setFinish(value: DuoFinish) {
       finish = value
       m.titanium.color.setHex(value === 'white' ? 0xb8b5b0 : 0x38495e)

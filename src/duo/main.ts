@@ -2,7 +2,11 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import { createDuo } from './model'
+import { createPhoneSoftware } from './software'
 import { stepPose } from './pose'
+import { createKnollingLayout } from '../knolling'
+import { setupNavigation } from '../navigation'
+import { setupAppearance } from '../appearance'
 import { foldRadians, type DuoFinish, type DuoPose } from './types'
 import './style.css'
 
@@ -11,8 +15,8 @@ document.querySelector('meta[name="description"]')?.setAttribute('content', 'An 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <main class="duo-app">
     <header class="duo-header">
-      <a class="duo-brand" href="?model=duo"><span></span> PHONEFORM <i>/</i> LAB</a>
-      <nav aria-label="Device model"><a href="?model=15">15 Pro</a><a href="?model=duo" aria-current="page">iPhone Duo</a></nav>
+      <a class="duo-brand" href="/"><span></span> PHONEFORM <i>/</i> LAB</a>
+      <nav aria-label="Device model"><a href="/" aria-current="page">iPhone Duo</a><a href="?model=15">15 Pro</a></nav>
       <button id="reference-toggle" type="button" aria-expanded="false" aria-controls="reference-panel">Reference notes ↗</button>
       <aside id="reference-panel" hidden>
         <strong>A study of the supplied announcement.</strong>
@@ -39,7 +43,9 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
           <label for="explode-amount">COMPONENT SEPARATION <output id="explode-output" for="explode-amount" aria-live="off">0%</output></label>
           <input id="explode-amount" type="range" min="0" max="100" value="0" aria-label="Internal component separation" />
           <div class="explode-actions"><button id="explode-toggle" type="button">Explode internals ↗</button><button id="reveal-toggle" type="button" aria-pressed="false">Reveal</button></div>
+          <button id="knoll-toggle" type="button" aria-pressed="false">Knolling grid</button>
           <p id="pose-status" aria-live="polite">Exploding opens the device into a service view.</p>
+          <div id="appearance"></div>
         </section>
         <div class="component-heading"><span>COMPONENT LIBRARY</span><span id="component-count"></span></div>
         <input id="component-search" type="search" placeholder="Find a component…" aria-label="Find a component" />
@@ -51,9 +57,9 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <div class="duo-stage">
         <div class="duo-stage-heading"><span id="stage-state">ARTICULATED ASSEMBLY</span><span><i></i> LIVE 3D</span></div>
         <div id="duo-scene" data-fold="130" data-explosion="0"></div>
-        <div class="duo-stage-controls"><button id="view-front" type="button">Front</button><button id="view-rear" type="button">Rear</button><button id="view-perspective" type="button">Perspective</button><span></span><button id="screen-toggle" type="button" aria-pressed="true">Displays on</button><button id="reset-camera" type="button">Reset ↺</button></div>
+        <div class="duo-stage-controls"><button id="use-apps" type="button">Use apps</button><span></span><button id="view-front" type="button">Front</button><button id="view-rear" type="button">Rear</button><button id="view-perspective" type="button">Perspective</button><span></span><button id="screen-toggle" type="button" aria-pressed="true">Displays on</button><button id="reset-camera" type="button">Reset ↺</button></div>
         <section class="duo-caption" aria-live="polite">
-          <div><p id="part-category">TITANIUM / CERAMIC SHIELD / OLED</p><h2 id="part-title">Built around a new point of view.</h2><p id="part-detail">Drag to orbit. Scroll to zoom. Fold it, open it, or select any component for an isolated close-up.</p></div>
+          <div><p id="part-category">TITANIUM / CERAMIC SHIELD / OLED</p><h2 id="part-title">Built around a new point of view.</h2><p id="part-detail">Drag to orbit. Middle-drag or Space + drag to pan. Scroll to zoom. Select any component for an isolated close-up.</p></div>
           <span id="part-evidence" hidden></span>
         </section>
         <div class="duo-dimensions"><span id="dimension-value">117.8 mm tall · 254 g</span><span>5.4″ COVER <i>/</i> 7.6″ INNER</span></div>
@@ -71,6 +77,9 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 const host = document.querySelector<HTMLDivElement>('#duo-scene')!
 const model = createDuo()
+model.setPose({ fold: 180, explosion: 1 })
+const knollLayout = createKnollingLayout(model.parts, ['cover-display', 'rear-glass', 'cameras', 'cover-camera', 'magsafe'])
+model.setPose({ fold: 130, explosion: 0 })
 const scene = new THREE.Scene()
 scene.add(model.phone)
 const camera = new THREE.PerspectiveCamera(32, 1, 0.06, 250)
@@ -82,7 +91,7 @@ renderer.toneMappingExposure = 1.02
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.domElement.tabIndex = 0
-renderer.domElement.setAttribute('aria-label', 'Interactive folding iPhone Duo. Drag or arrow keys to orbit, scroll to zoom, R to reset, Escape to show all parts.')
+renderer.domElement.setAttribute('aria-label', 'Interactive folding iPhone Duo. Drag or arrow keys to orbit, middle-drag or Space and drag to pan, scroll to zoom, R to reset, Escape to show all parts.')
 host.appendChild(renderer.domElement)
 const room = new RoomEnvironment()
 const generator = new THREE.PMREMGenerator(renderer)
@@ -115,11 +124,25 @@ model.phone.traverse(object => {
   object.castShadow = materials.every(material => !material.transparent)
   object.receiveShadow = true
 })
+const software = createPhoneSoftware(renderer, camera, model.display, () => renderer.render(scene, camera))
+const appearance = setupAppearance({
+  color: '#e6e6e0',
+  onColor(color) {
+    model.setColor(color)
+    document.querySelectorAll('[data-finish]').forEach(button => button.setAttribute('aria-pressed', 'false'))
+  },
+  onWallpaper(value) {
+    model.setWallpaper(value)
+    software.setWallpaper(value)
+  },
+})
+const useApps = document.querySelector<HTMLButtonElement>('#use-apps')!
+if (!software.supported) useApps.textContent = 'Apps preview'
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = !reducedMotion.matches
-controls.enablePan = false
+const navigation = setupNavigation(controls, renderer.domElement)
 controls.minDistance = 1.0
 controls.maxDistance = 190
 controls.minPolarAngle = 0.1
@@ -130,6 +153,7 @@ const foldOutput = document.querySelector<HTMLOutputElement>('#fold-output')!
 const explodeOutput = document.querySelector<HTMLOutputElement>('#explode-output')!
 const explodeToggle = document.querySelector<HTMLButtonElement>('#explode-toggle')!
 const revealToggle = document.querySelector<HTMLButtonElement>('#reveal-toggle')!
+const knollToggle = document.querySelector<HTMLButtonElement>('#knoll-toggle')!
 const status = document.querySelector<HTMLElement>('#pose-status')!
 const library = document.querySelector<HTMLDivElement>('#duo-parts')!
 const dimension = document.querySelector<HTMLElement>('#dimension-value')!
@@ -143,6 +167,8 @@ let reveal = false
 let screens = true
 let view: 'front' | 'rear' | 'perspective' = 'perspective'
 let tent = false
+let knolling = false
+let knollAmount = 0
 let cameraTween: { start: THREE.Vector3; end: THREE.Vector3; startTarget: THREE.Vector3; endTarget: THREE.Vector3; elapsed: number } | null = null
 const visibleBounds = new THREE.Box3()
 const targetRotation = new THREE.Quaternion()
@@ -151,6 +177,7 @@ const savedRotation = new THREE.Quaternion()
 const yAxis = new THREE.Vector3(0, 1, 0)
 
 function orientation(angle: number, separation = 0) {
+  if (knolling) return new THREE.Quaternion()
   if (tent) {
     return new THREE.Quaternion().setFromEuler(new THREE.Euler(0.12, -0.58, 0))
       .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2))
@@ -170,6 +197,19 @@ function orientation(angle: number, separation = 0) {
   ))
 }
 
+function applyPose(value: DuoPose, amount: number) {
+  knollLayout.restore()
+  model.setPose(value)
+  knollLayout.apply(amount, camera.aspect)
+}
+
+function setKnolling(value: boolean) {
+  knolling = value
+  knollToggle.setAttribute('aria-pressed', String(value))
+  revealToggle.disabled = value
+  document.querySelectorAll<HTMLButtonElement>('[id^="view-"]').forEach(button => { button.disabled = value })
+}
+
 function frameModel(animate = true) {
   const damping = controls.enableDamping
   controls.enableDamping = false
@@ -177,7 +217,7 @@ function frameModel(animate = true) {
   controls.enableDamping = damping
   savedRotation.copy(model.phone.quaternion)
   model.phone.quaternion.copy(orientation(target.fold, target.explosion))
-  model.setPose(target)
+  applyPose(target, knolling ? 1 : 0)
   model.phone.updateMatrixWorld(true)
   visibleBounds.makeEmpty()
   for (const part of model.parts) {
@@ -188,7 +228,10 @@ function frameModel(animate = true) {
   const halfFov = THREE.MathUtils.degToRad(camera.fov / 2)
   const distance = Math.max(size.y / 2 / Math.tan(halfFov), size.x / 2 / (Math.tan(halfFov) * camera.aspect)) * 1.12 + size.z / 2
   const position = center.clone().add(new THREE.Vector3(0, 0, Math.max(2, distance)))
-  model.setPose(pose)
+  controls.maxDistance = Math.max(190, distance * 2)
+  camera.far = Math.max(250, distance * 4)
+  camera.updateProjectionMatrix()
+  applyPose(pose, knollAmount)
   model.phone.quaternion.copy(savedRotation)
   if (animate && !reducedMotion.matches) {
     cameraTween = { start: camera.position.clone(), end: position, startTarget: controls.target.clone(), endTarget: center, elapsed: 0 }
@@ -208,8 +251,8 @@ function applyVisibility() {
 
 function updateCaption() {
   const part = model.parts.find(part => part.id === selection)
-  document.querySelector('#part-title')!.textContent = part?.name ?? 'Built around a new point of view.'
-  document.querySelector('#part-detail')!.textContent = part?.detail ?? 'Drag to orbit. Scroll to zoom. Fold it, open it, or select any component for an isolated close-up.'
+  document.querySelector('#part-title')!.textContent = part?.name ?? (knolling ? 'Every component, in its place.' : 'Built around a new point of view.')
+  document.querySelector('#part-detail')!.textContent = part?.detail ?? (knolling ? 'All components at their original scale, laid flat in an aligned grid. Middle-drag or Space + drag to pan. Select one to inspect it, or turn off Knolling grid to return to the exploded view.' : 'Drag to orbit. Middle-drag or Space + drag to pan. Scroll to zoom. Select any component for an isolated close-up.')
   document.querySelector('#part-category')!.textContent = part ? `${String(model.parts.indexOf(part) + 1).padStart(2, '0')} / ${part.side.toUpperCase()} ASSEMBLY` : 'TITANIUM / CERAMIC SHIELD / OLED'
   const evidence = document.querySelector<HTMLElement>('#part-evidence')!
   evidence.hidden = !part
@@ -225,7 +268,8 @@ function clearSelection() {
   updateCaption()
 }
 
-function requestPose(next: DuoPose, clear = true) {
+function requestPose(next: DuoPose, clear = true, keepKnolling = false) {
+  if (!keepKnolling) setKnolling(false)
   if (clear) clearSelection()
   target = { fold: THREE.MathUtils.clamp(next.fold, 0, 180), explosion: THREE.MathUtils.clamp(next.explosion, 0, 1) }
   if (target.explosion > 0) {
@@ -248,6 +292,14 @@ function requestPose(next: DuoPose, clear = true) {
   if (reducedMotion.matches) pose = { ...target }
   frameModel()
 }
+knollToggle.addEventListener('click', () => {
+  setKnolling(!knolling)
+  reveal = false
+  revealToggle.setAttribute('aria-pressed', 'false')
+  tent = false
+  view = 'perspective'
+  requestPose({ fold: 180, explosion: 1 }, true, true)
+})
 foldInput.addEventListener('input', () => {
   tent = false
   requestPose({ fold: foldInput.valueAsNumber, explosion: 0 })
@@ -279,7 +331,7 @@ function selectPart(id: string) {
   tent = false
   view = 'perspective'
   pose = { fold: 180, explosion: 1 }
-  requestPose(pose, false)
+  requestPose(pose, false, true)
   applyVisibility()
   updateCaption()
   frameModel()
@@ -316,6 +368,7 @@ document.querySelectorAll<HTMLButtonElement>('[data-finish]').forEach(button => 
   const finish = button.dataset.finish
   if (finish !== 'white' && finish !== 'night') throw new Error('Unknown Duo finish')
   model.setFinish(finish as DuoFinish)
+  appearance.setColor(finish === 'white' ? '#e6e6e0' : '#263748')
   document.querySelectorAll<HTMLButtonElement>('[data-finish]').forEach(item => item.setAttribute('aria-pressed', String(item === button)))
 }))
 document.querySelector<HTMLButtonElement>('#screen-toggle')!.addEventListener('click', event => {
@@ -324,6 +377,19 @@ document.querySelector<HTMLButtonElement>('#screen-toggle')!.addEventListener('c
   const button = event.currentTarget as HTMLButtonElement
   button.setAttribute('aria-pressed', String(screens))
   button.textContent = screens ? 'Displays on' : 'Displays off'
+})
+useApps.addEventListener('click', () => {
+  if (!software.supported) { software.openPreview(); return }
+  tent = false
+  reveal = false
+  revealToggle.setAttribute('aria-pressed', 'false')
+  view = 'front'
+  screens = true
+  model.setScreen(true)
+  const screenToggle = document.querySelector<HTMLButtonElement>('#screen-toggle')!
+  screenToggle.setAttribute('aria-pressed', 'true')
+  screenToggle.textContent = 'Displays on'
+  requestPose({ fold: 180, explosion: 0 })
 })
 for (const direction of ['front', 'rear', 'perspective'] as const) {
   document.querySelector(`#view-${direction}`)!.addEventListener('click', () => {
@@ -347,7 +413,11 @@ reducedMotion.addEventListener('change', () => {
 const raycaster = new THREE.Raycaster()
 const pointer = new THREE.Vector2()
 let pointerStart: { x: number; y: number } | null = null
-renderer.domElement.addEventListener('pointerdown', event => { pointerStart = { x: event.clientX, y: event.clientY } })
+renderer.domElement.addEventListener('pointerdown', event => {
+  pointerStart = null
+  if (!navigation.canSelect(event)) return
+  pointerStart = { x: event.clientX, y: event.clientY }
+})
 renderer.domElement.addEventListener('pointercancel', () => { pointerStart = null })
 renderer.domElement.addEventListener('pointerup', event => {
   const start = pointerStart
@@ -357,6 +427,7 @@ renderer.domElement.addEventListener('pointerup', event => {
   pointer.set((event.clientX - box.left) / box.width * 2 - 1, -(event.clientY - box.top) / box.height * 2 + 1)
   raycaster.setFromCamera(pointer, camera)
   const hit = raycaster.intersectObjects(model.parts.filter(part => part.group.visible).map(part => part.group), true)[0]
+  if (software.supported && screens && pose.explosion === 0 && hit?.object === model.display.surface) return
   if (hit && typeof hit.object.userData.partId === 'string') selectPart(hit.object.userData.partId)
 })
 renderer.domElement.addEventListener('keydown', event => {
@@ -404,7 +475,10 @@ resize()
 const clock = new THREE.Clock()
 function renderFrame(delta: number) {
   pose = stepPose(pose, target, delta, reducedMotion.matches)
-  model.setPose(pose)
+  const knollTarget = knolling && pose.fold === 180 ? 1 : 0
+  knollAmount = reducedMotion.matches ? knollTarget : THREE.MathUtils.damp(knollAmount, knollTarget, 9, delta)
+  if (Math.abs(knollAmount - knollTarget) < 0.0005) knollAmount = knollTarget
+  applyPose(pose, knollAmount)
   targetRotation.copy(orientation(pose.fold, pose.explosion))
   if (reducedMotion.matches) model.phone.quaternion.copy(targetRotation)
   else model.phone.quaternion.slerp(targetRotation, 1 - Math.exp(-10 * delta))
@@ -417,6 +491,7 @@ function renderFrame(delta: number) {
   }
   controls.update(delta)
   renderer.render(scene, camera)
+  software.updateGeometry(screens && model.display.part.group.visible && pose.fold > 20 && pose.explosion === 0 && knollAmount === 0)
   const foldText = `${Math.round(pose.fold)}°`
   const explosionText = `${Math.round(pose.explosion * 100)}%`
   if (foldOutput.value !== foldText) foldOutput.value = foldText
@@ -424,11 +499,12 @@ function renderFrame(delta: number) {
   host.dataset.fold = pose.fold.toFixed(2)
   host.dataset.explosion = pose.explosion.toFixed(3)
   host.dataset.selection = selection ?? ''
+  host.dataset.knolling = knollAmount.toFixed(3)
   const opening = target.explosion > 0 && pose.fold < 180
   const assembling = target.fold < 180 && pose.explosion > 0
-  const statusText = opening ? 'Opening into a service view…' : assembling ? 'Reuniting the layers before folding…' : 'Exploding opens the device into a service view.'
+  const statusText = opening ? 'Opening into a service view…' : knolling ? `${model.parts.length} components, aligned on one plane. Select a part to inspect it.` : assembling ? 'Reuniting the layers before folding…' : 'Exploding opens the device into a service view.'
   if (status.textContent !== statusText) status.textContent = statusText
-  const stateText = selection ? 'ISOLATED COMPONENT' : pose.explosion > 0 ? 'EXPLODED ASSEMBLY' : tent ? 'SELF-SUPPORTING TENT' : 'ARTICULATED ASSEMBLY'
+  const stateText = selection ? 'ISOLATED COMPONENT' : knolling ? 'KNOLLING GRID' : pose.explosion > 0 ? 'EXPLODED ASSEMBLY' : tent ? 'SELF-SUPPORTING TENT' : 'ARTICULATED ASSEMBLY'
   if (stageState.textContent !== stateText) stageState.textContent = stateText
   const dimensionsText = pose.explosion > 0 ? 'Dual-cell architecture · capacity unpublished' : pose.fold === 0 ? '84.1 × 117.8 × 11.3 mm closed' : pose.fold === 180 ? '164.6 × 117.8 × 5.2 mm open' : '117.8 mm tall · 254 g'
   if (dimension.textContent !== dimensionsText) dimension.textContent = dimensionsText
