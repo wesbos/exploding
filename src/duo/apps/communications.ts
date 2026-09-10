@@ -432,7 +432,7 @@ function createPhoneApp(): PhoneApp {
 
       function syncActiveCall() {
         if (!active) return
-        const elapsed = (active.connectedAt ?? now()) - active.startedAt
+        const elapsed = active.connectedAt ? now() - active.connectedAt : 0
         displayDuration.textContent = formatDuration(elapsed)
         callButton.setAttribute('aria-label', 'End call')
         callButton.dataset.mode = 'end'
@@ -511,6 +511,7 @@ function createPhoneApp(): PhoneApp {
 
       function renderDial() {
         dialInput.value = dialed
+        left.querySelector<HTMLElement>('.comm-call-card')!.hidden = !dialed && !active
         const contact = resolveContact(contacts, dialed)
         displayName.textContent = contact?.name ?? (active?.label ?? 'Ready to dial')
         displayNumber.textContent = dialed || '—'
@@ -1066,7 +1067,7 @@ function createFaceTimeApp(): PhoneApp {
         previewAvatar.textContent = initials(label || 'FT')
         previewMode.textContent = active?.mode ?? (modeButtons.find(button => button.getAttribute('aria-pressed') === 'true')?.dataset.mode === 'audio' ? 'Audio' : 'Video')
         previewLive.textContent = active
-          ? `${handle} · ${formatDuration((active.connectedAt ?? now()) - active.startedAt)}`
+          ? `${handle} · ${formatDuration(active.connectedAt ? now() - active.connectedAt : 0)}`
           : contact ? `${handle}` : 'Pick a contact and press start.'
         startButton.innerHTML = `${commSymbol(previewMode.textContent.toLowerCase() === 'audio' ? 'phone' : 'video')} ${active ? 'Calling…' : 'FaceTime'}`
         startButton.disabled = Boolean(active)
@@ -1176,7 +1177,7 @@ function createMessagesApp(): PhoneApp {
           <span class="comm-visually-hidden">Search conversations</span>
           <input class="comm-input comm-search" type="search" placeholder="Search">
         </label>
-        <form class="comm-inline-form">
+        <form class="comm-inline-form" hidden>
           <label class="comm-field">
             <span class="comm-visually-hidden">Start a conversation</span>
             <input class="comm-input comm-new-thread" type="search" placeholder="To: Name, phone, or handle">
@@ -1367,6 +1368,7 @@ function createMessagesApp(): PhoneApp {
       }
 
       newChatButton.addEventListener('click', () => {
+        newThreadForm.hidden = false
         newThreadInput.focus()
         newThreadInput.select()
       })
@@ -1378,6 +1380,7 @@ function createMessagesApp(): PhoneApp {
         const existing = threads.find(thread => thread.contactId === contact?.id || normalizePhone(thread.address) === normalizePhone(entry) || thread.label.trim().toLowerCase() === entry.toLowerCase())
         if (existing) {
           selectedThreadId = existing.id
+          newThreadForm.hidden = true
           render()
           messageInput.focus()
           return
@@ -1396,6 +1399,7 @@ function createMessagesApp(): PhoneApp {
         selectedThreadId = thread.id
         saveThreads(threads)
         newThreadInput.value = ''
+        newThreadForm.hidden = true
         render()
         messageInput.focus()
       })

@@ -33,7 +33,7 @@ export const SCREEN_WIDTH = 1000
 export const SCREEN_HEIGHT = 704
 
 const dockIds = ['phone', 'safari', 'messages', 'mail', 'music', 'photos', 'camera', 'settings']
-const darkApps = new Set(['calculator', 'clock', 'camera', 'facetime', 'weather', 'tv', 'fitness', 'watch', 'wallet', 'compass', 'measure', 'stocks', 'magnifier', 'voice-memos'])
+const darkApps = new Set(['calculator', 'clock', 'camera', 'facetime', 'weather', 'tv', 'fitness', 'watch', 'wallet', 'home', 'compass', 'measure', 'stocks', 'magnifier', 'voice-memos'])
 const statusSymbols = `
   <svg class="phone-signal" viewBox="0 0 20 14" aria-hidden="true"><path d="M1 10h3v4H1zm5-3h3v7H6zm5-3h3v10h-3zm5-4h3v14h-3z" fill="currentColor"/></svg>
   <svg class="phone-wifi" viewBox="0 0 20 15" aria-hidden="true"><path d="M1.5 4.2a13 13 0 0 1 17 0M4.5 7.5a8.5 8.5 0 0 1 11 0M7.5 10.8a4 4 0 0 1 5 0" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/><circle cx="10" cy="13.5" r="1.3" fill="currentColor"/></svg>

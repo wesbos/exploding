@@ -135,6 +135,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  scrollbar-width: none;
 }
 .creation-list-item {
   display: grid;
@@ -181,7 +182,7 @@
   font-size: 17px;
   line-height: 1.4;
 }
-.creation-detail-body { display: flex; flex-direction: column; gap: 16px; flex: 1; min-height: 0; overflow: auto; padding-bottom: 12px; }
+.creation-detail-body { display: flex; flex-direction: column; gap: 16px; flex: 1; min-height: 0; overflow: auto; padding-bottom: 12px; scrollbar-width: none; }
 .creation-summary-grid { display: flex; flex-direction: column; gap: 0; flex-shrink: 0; }
 .creation-summary-card {
   display: flex;
@@ -294,7 +295,7 @@
 
 /* Journal's dated entry previews and uncluttered writing surface. */
 .creation-journal-pane .creation-toolbar--journal { flex-wrap: nowrap; }
-.creation-mood-filters { display: flex; gap: 8px; overflow-x: auto; width: 100%; }
+.creation-mood-filters { display: flex; gap: 8px; overflow-x: auto; width: 100%; scrollbar-width: none; }
 .creation-mood-chip { flex-shrink: 0; font-size: 15px !important; white-space: nowrap; background: #fff; border-radius: 8px; }
 .creation-mood-chip[aria-pressed=true] { background: #5856d6; color: #fff; }
 .creation-journal-pane .creation-list { gap: 12px; }
@@ -363,7 +364,7 @@
 .creation-player-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; order: 2; }
 .creation-player-time { color: #98989d; font-size: 15px; font-variant-numeric: tabular-nums; }
 .creation-play-toggle { min-width: 72px; font-size: 20px !important; color: #fff; }
-.creation-waveform { display: grid; grid-template-columns: repeat(18, minmax(0, 1fr)); align-items: center; gap: 9px; height: 160px; }
+.creation-waveform { display: grid; grid-template-columns: repeat(72, minmax(0, 1fr)); align-items: center; gap: 3px; height: 160px; }
 .creation-waveform span { display: block; min-height: 3px; background: #ff453a; border-radius: 1px; }
 .creation-player-track { height: 2px; background: #38383a; overflow: hidden; }
 .creation-player-fill { display: block; height: 100%; background: #ff453a; }

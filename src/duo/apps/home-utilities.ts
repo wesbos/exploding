@@ -762,19 +762,19 @@ const findMyApp: PhoneApp = {
       for (const pinLayer of [pins, overviewPins]) {
         pinLayer.replaceChildren()
         for (const item of visibleItems()) {
-        const pin = createButton('', `findmy-pin findmy-pin--${item.group}${item.id === state.selectedId ? ' is-selected' : ''}${soundTargetId === item.id ? ' is-ringing' : ''}`, () => {
-          state.selectedId = item.id
-          persist()
-          render()
-        }, { ariaLabel: `${item.name}, ${item.location}` })
-        pin.style.left = `${item.x}%`
-        pin.style.top = `${item.y}%`
-        pin.style.setProperty('--pin-accent', item.accent)
-        pin.innerHTML = `
-          <span aria-hidden="true">${item.group === 'people' ? item.name.split(' ').map(part => part[0]).join('') : utilitySymbol(item.group === 'devices' ? 'device' : 'item')}</span>
-          <small></small>
-        `
-        pin.querySelector('small')!.textContent = item.name.split(' ')[0]
+          const pin = createButton('', `findmy-pin findmy-pin--${item.group}${item.id === state.selectedId ? ' is-selected' : ''}${soundTargetId === item.id ? ' is-ringing' : ''}`, () => {
+            state.selectedId = item.id
+            persist()
+            render()
+          }, { ariaLabel: `${item.name}, ${item.location}` })
+          pin.style.left = `${item.x}%`
+          pin.style.top = `${item.y}%`
+          pin.style.setProperty('--pin-accent', item.accent)
+          pin.innerHTML = `
+            <span aria-hidden="true">${item.group === 'people' ? item.name.split(' ').map(part => part[0]).join('') : utilitySymbol(item.group === 'devices' ? 'device' : 'item')}</span>
+            <small></small>
+          `
+          pin.querySelector('small')!.textContent = item.name.split(' ')[0]
           pinLayer.append(pin)
         }
       }

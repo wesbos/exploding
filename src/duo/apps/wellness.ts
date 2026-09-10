@@ -304,9 +304,7 @@ function clamp(value: number, min: number, max: number) {
 }
 
 function formatMetricValue(metric: HealthMetric, value: number) {
-  const formatted = metric.precision === 1
-    ? value.toFixed(1).replace(/\.0$/, '')
-    : String(Math.round(value))
+  const formatted = value.toLocaleString([], { maximumFractionDigits: metric.precision ?? 0 })
   return `${formatted} ${metric.unit}`
 }
 

@@ -841,8 +841,6 @@ function renderMeasure() {
       : ''
 
     svg.innerHTML = `
-      <defs>
-      </defs>
       <rect width="100" height="100" class="sys-measure-surface"></rect>
       <path d="M 0 10 H 100 M 0 20 H 100 M 0 30 H 100 M 0 40 H 100 M 0 50 H 100 M 0 60 H 100 M 0 70 H 100 M 0 80 H 100 M 0 90 H 100" class="sys-measure-grid-lines"></path>
       <path d="M 10 0 V 100 M 20 0 V 100 M 30 0 V 100 M 40 0 V 100 M 50 0 V 100 M 60 0 V 100 M 70 0 V 100 M 80 0 V 100 M 90 0 V 100" class="sys-measure-grid-lines"></path>
@@ -1491,7 +1489,7 @@ function renderSettings() {
 
   function setPreference(key: string, value: boolean | number) {
     state.prefs[key] = value
-    renderDetail()
+    safeWrite(settingsKey, state)
   }
 
   function togglePreference(key: string) {
@@ -1567,6 +1565,7 @@ function renderSettings() {
         const key = input.dataset.settingRange!
         const value = Number(input.value)
         setPreference(key, value)
+        input.parentElement!.querySelector('strong')!.textContent = key === 'brightness' ? `${value}%` : `${value} min`
       })
     })
     safeWrite(settingsKey, state)

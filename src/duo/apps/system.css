@@ -99,7 +99,7 @@
 .sys-compass-pane--left .sys-metric strong { font-size: 72px; font-weight: 300; }
 .sys-compass-pane--left .sys-note { margin-top: auto; }
 .sys-compass-wrap { display: flex; flex-direction: column; gap: 24px; }
-.sys-compass-dial { position: relative; width: min(100%, 360px); aspect-ratio: 1; margin: 0 auto; border-radius: 50%; cursor: crosshair; }
+.sys-compass-dial { position: relative; width: min(100%, 360px); aspect-ratio: 1; margin: 0 auto; border-radius: 50%; overflow: clip; cursor: crosshair; }
 .sys-compass-scale { position: absolute; width: 100%; height: 100%; transform: rotate(calc(-1 * var(--sys-compass-rotation, 0deg))); }
 .sys-compass-rose { position: absolute; inset: 27%; transform: rotate(calc(-1 * var(--sys-compass-rotation, 0deg))); }
 .sys-compass-rose span { position: absolute; font-size: 24px; font-weight: 500; }
@@ -167,7 +167,7 @@
 .sys-news-pane .sys-chip-row { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 16px; border-bottom: .5px solid var(--sys-line); }
 .sys-news-pane .sys-chip { flex-shrink: 0; padding: 0; border-radius: 0; background: #fff; color: #6c6c70; }
 .sys-news-pane .sys-chip[aria-pressed="true"] { color: #e92743; border-bottom: 2px solid #e92743; }
-.sys-news-pane .sys-list-item { display: grid; gap: 14px; border-radius: 0; padding: 0 0 24px; background: transparent; }
+.sys-news-pane .sys-list-item { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; border-radius: 0; padding: 0 0 24px; background: transparent; }
 .sys-news-publication { font-size: 17px; font-weight: 800; letter-spacing: -.04em; }
 .sys-news-publication span { font-size: 13px; color: #e92743; margin-left: 8px; font-weight: 600; }
 .sys-news-pane .sys-list-copy strong { font: 700 30px/1.12 Georgia, "Times New Roman", serif; letter-spacing: -.025em; }
@@ -225,7 +225,7 @@
 .sys-settings-icon--notifications { background: #ff3b30; }
 .sys-settings-icon--privacy { background: #007aff; }
 .sys-chevron { color: #b5b5ba; font-size: 25px; font-weight: 400; }
-.sys-settings-detail { padding: 0; display: grid; gap: 24px; }
+.sys-settings-detail { padding: 0; display: grid; gap: 24px; background: transparent; border-radius: 0; }
 .sys-settings-parent { color: #007aff; font-size: 17px; margin-bottom: 10px !important; }
 .sys-settings-list { background: #fff; border-radius: 10px; overflow: hidden; padding-left: 16px; }
 .sys-setting-row { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 12px 16px 12px 0; min-height: 54px; border: 0; border-bottom: .5px solid var(--sys-line); color: #000; text-align: left; background: #fff; }

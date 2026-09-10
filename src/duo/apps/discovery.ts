@@ -1560,7 +1560,6 @@ function createTranslateApp(): PhoneApp {
               <span class="discovery-kicker">Translation</span>
               <span class="discovery-result-status"></span>
             </div>
-            <p class="discovery-footnote">Offline demo · Built-in phrase dictionary only</p>
             <strong class="discovery-result-translation"></strong>
             <p class="discovery-result-source"></p>
             <p class="discovery-result-note"></p>
@@ -1570,6 +1569,7 @@ function createTranslateApp(): PhoneApp {
             <span class="discovery-small-status discovery-translate-status"></span>
           </div>
         </div>
+        <p class="discovery-footnote">Offline demo · Built-in phrase dictionary only</p>
       `
       const right = document.createElement('section')
       right.className = 'discovery-screen discovery-screen-translate discovery-theme-translate'

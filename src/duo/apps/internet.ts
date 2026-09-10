@@ -461,13 +461,15 @@ function isBrowserState(value: unknown): value is BrowserState {
 }
 
 function loadBrowserState(): BrowserState {
-  return safeRead(BROWSER_KEY, {
+  const state = safeRead(BROWSER_KEY, {
     bookmarks: ['home'],
     history: ['duo://home'],
     historyIndex: 0,
     search: '',
     view: { kind: 'page', url: 'duo://home' },
   }, isBrowserState)
+  state.bookmarks = state.bookmarks.map(url => browserPageMap.get(url)?.url ?? url)
+  return state
 }
 
 function saveBrowserState(state: BrowserState) {

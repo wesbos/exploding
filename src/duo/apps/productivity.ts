@@ -223,7 +223,6 @@ function formatClockTime(date: Date, timeZone: string) {
   return new Intl.DateTimeFormat([], {
     hour: 'numeric',
     minute: '2-digit',
-    second: '2-digit',
     timeZone,
   }).format(date)
 }
@@ -664,7 +663,7 @@ function createRemindersApp(): PhoneApp {
           button.setAttribute('role', 'option')
           button.setAttribute('aria-selected', String(list.id === selectedListId))
           button.innerHTML = `
-            <span class="productivity-list-symbol" aria-hidden="true">☷</span>
+            <span class="productivity-list-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="4" cy="6" r="1.5" fill="currentColor"/><circle cx="4" cy="12" r="1.5" fill="currentColor"/><circle cx="4" cy="18" r="1.5" fill="currentColor"/></svg></span>
             <div>
               <strong></strong>
             </div>
@@ -972,8 +971,8 @@ function createClockApp(): PhoneApp {
         tabs.className = 'productivity-clock-tabs'
         tabs.setAttribute('aria-label', 'Clock views')
         tabs.innerHTML = `
-          <button type="button" data-view="world" aria-pressed="${pane === left}"><span aria-hidden="true">◎</span>World Clock</button>
-          <button type="button" data-view="stopwatch" aria-pressed="${pane === right}"><span aria-hidden="true">◴</span>Stopwatch</button>
+          <button type="button" data-view="world" aria-pressed="${pane === left}"><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="11"/><ellipse cx="14" cy="14" rx="5" ry="11"/><path d="M3 14h22M5 8h18M5 20h18"/></svg>World Clock</button>
+          <button type="button" data-view="stopwatch" aria-pressed="${pane === right}"><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="16" r="9"/><path d="M11 2h6M14 2v5M21 7l2-2M14 10v6l3 2"/></svg>Stopwatch</button>
         `
         tabs.querySelectorAll<HTMLButtonElement>('button').forEach(button => {
           button.addEventListener('click', () => {
@@ -984,6 +983,7 @@ function createClockApp(): PhoneApp {
             if (!sourceHost || !targetHost) return
             sourceHost.replaceChildren(target)
             targetHost.replaceChildren(pane)
+            target.querySelector<HTMLButtonElement>('.productivity-clock-tabs [aria-pressed=true]')?.focus({ preventScroll: true })
           })
         })
         pane.append(tabs)

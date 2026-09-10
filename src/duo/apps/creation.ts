@@ -1027,6 +1027,9 @@ function createFreeformApp(): AppInstance {
   })
   addButton.addEventListener('click', createSelectedItem)
   randomizeButton.addEventListener('click', randomizeBoard)
+  deleteButton.addEventListener('click', () => {
+    if (selectedId) deleteItem(selectedId)
+  })
   board.addEventListener('pointerdown', event => {
     if (event.target === board) {
       selectedId = null
@@ -1583,9 +1586,9 @@ function createVoiceMemosApp(): AppInstance {
       beginPlayback(memo)
     })
     waveform.replaceChildren()
-    for (let index = 0; index < 18; index += 1) {
+    for (let index = 0; index < 72; index += 1) {
       const bar = document.createElement('span')
-      bar.style.height = `${20 + ((index * 11) % 38)}%`
+      bar.style.height = `${8 + Math.abs(Math.sin(index * 1.7) * Math.cos(index * .23)) * 72}%`
       waveform.append(bar)
     }
     syncPlaybackProgress()

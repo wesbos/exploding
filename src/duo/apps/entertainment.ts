@@ -496,7 +496,6 @@ function prepareMediaLayout(left: HTMLElement, right: HTMLElement, kind: Enterta
   heading.className = 'ent-player-heading'
   heading.innerHTML = `${mediaSymbol(kind)}<span>${kind === 'books' ? 'Reading Now' : kind === 'games' ? 'Game Details' : kind === 'tv' ? 'Continue Watching' : 'Now Playing'}</span>`
   right.prepend(heading)
-  right.querySelectorAll('.phone-eyebrow').forEach(element => element.remove())
   if (kind === 'books') {
     const excerpt = right.querySelector('[data-role="excerpt"]')!.closest('.ent-block')!
     excerpt.classList.add('ent-reading-page')
@@ -562,16 +561,12 @@ function createMusicApp(): PhoneApp {
     id: 'music',
     name: 'Music',
     icon: '♪',
-    color: '#9b7dff',
+    color: '#fa233b',
     create() {
       const left = document.createElement('section')
       left.className = 'ent-pane ent-music-pane'
       left.innerHTML = `
-        <div class="ent-title">
-          <p class="phone-eyebrow">ALBUMS, QUEUES, AND FAVORITES</p>
-          <h2>Music</h2>
-          <p class="ent-summary">Browse the library, pick a track, then drive the progress with a few deliberate taps.</p>
-        </div>
+        <header class="ent-title"></header>
         <div class="ent-block">
           <div class="ent-block-head">
             <span>Albums</span>
@@ -581,7 +576,7 @@ function createMusicApp(): PhoneApp {
         </div>
         <div class="ent-block">
           <div class="ent-block-head">
-            <span>Tracks</span>
+            <span>Songs</span>
             <span data-role="track-count"></span>
           </div>
           <div class="ent-list" data-role="tracks"></div>
@@ -594,7 +589,6 @@ function createMusicApp(): PhoneApp {
         <div class="ent-now-card">
           <div class="ent-art" data-role="art" aria-hidden="true"></div>
           <div class="ent-now-copy">
-            <p class="phone-eyebrow">NOW PLAYING</p>
             <h3 data-role="title"></h3>
             <p data-role="subtitle"></p>
             <p class="ent-status" data-role="status"></p>
@@ -823,16 +817,12 @@ function createPodcastApp(): PhoneApp {
     id: 'podcasts',
     name: 'Podcasts',
     icon: '◔',
-    color: '#61d4f0',
+    color: '#8729d6',
     create() {
       const left = document.createElement('section')
       left.className = 'ent-pane ent-podcasts-pane'
       left.innerHTML = `
-        <div class="ent-title">
-          <p class="phone-eyebrow">SHOWS, EPISODES, AND RESUMES</p>
-          <h2>Podcasts</h2>
-          <p class="ent-summary">Choose a show, switch episodes, and keep a tidy memory of what you saved or finished.</p>
-        </div>
+        <header class="ent-title"></header>
         <div class="ent-block">
           <div class="ent-block-head">
             <span>Shows</span>
@@ -855,7 +845,6 @@ function createPodcastApp(): PhoneApp {
         <div class="ent-now-card">
           <div class="ent-art" data-role="art" aria-hidden="true"></div>
           <div class="ent-now-copy">
-            <p class="phone-eyebrow">RESUME LISTENING</p>
             <h3 data-role="title"></h3>
             <p data-role="subtitle"></p>
             <p class="ent-status" data-role="status"></p>
@@ -1108,16 +1097,12 @@ function createTvApp(): PhoneApp {
     id: 'tv',
     name: 'TV',
     icon: '▣',
-    color: '#57b7ff',
+    color: '#1c1c1e',
     create() {
       const left = document.createElement('section')
       left.className = 'ent-pane ent-tv-pane'
       left.innerHTML = `
-        <div class="ent-title">
-          <p class="phone-eyebrow">WATCHLIST, EPISODES, AND RESUME POINTS</p>
-          <h2>TV</h2>
-          <p class="ent-summary">Keep a watchlist, jump episodes, and manage your place without needing a real stream.</p>
-        </div>
+        <header class="ent-title"></header>
         <div class="ent-block">
           <div class="ent-block-head">
             <span>Watchlist</span>
@@ -1127,7 +1112,7 @@ function createTvApp(): PhoneApp {
         </div>
         <div class="ent-block">
           <div class="ent-block-head">
-            <span>Series guide</span>
+            <span>TV Shows</span>
             <span data-role="series-count"></span>
           </div>
           <div class="ent-list" data-role="series"></div>
@@ -1140,7 +1125,6 @@ function createTvApp(): PhoneApp {
         <div class="ent-now-card">
           <div class="ent-art" data-role="art" aria-hidden="true"></div>
           <div class="ent-now-copy">
-            <p class="phone-eyebrow">CONTINUE WATCHING</p>
             <h3 data-role="title"></h3>
             <p data-role="subtitle"></p>
             <p class="ent-status" data-role="status"></p>
@@ -1420,14 +1404,10 @@ function createBooksApp(): PhoneApp {
       const left = document.createElement('section')
       left.className = 'ent-pane ent-books-pane'
       left.innerHTML = `
-        <div class="ent-title">
-          <p class="phone-eyebrow">BOOKS, CHAPTERS, AND BOOKMARKS</p>
-          <h2>Books</h2>
-          <p class="ent-summary">Carry a shelf, jump chapters, and pin the pages you want to find again quickly.</p>
-        </div>
+        <header class="ent-title"></header>
         <div class="ent-block">
           <div class="ent-block-head">
-            <span>Bookshelf</span>
+            <span>All Books</span>
             <span data-role="book-count"></span>
           </div>
           <div class="ent-album-grid" data-role="books"></div>
@@ -1447,7 +1427,6 @@ function createBooksApp(): PhoneApp {
         <div class="ent-now-card">
           <div class="ent-art" data-role="art" aria-hidden="true"></div>
           <div class="ent-now-copy">
-            <p class="phone-eyebrow">READING NOW</p>
             <h3 data-role="title"></h3>
             <p data-role="subtitle"></p>
             <p class="ent-status" data-role="status"></p>
@@ -1673,14 +1652,10 @@ function createGamesApp(): PhoneApp {
       const left = document.createElement('section')
       left.className = 'ent-pane ent-games-pane'
       left.innerHTML = `
-        <div class="ent-title">
-          <p class="phone-eyebrow">ARCADE, FAVORITES, AND HIGH SCORES</p>
-          <h2>Games</h2>
-          <p class="ent-summary">Browse the cabinet, launch a run, and chase a better score without a live connection.</p>
-        </div>
+        <header class="ent-title"></header>
         <div class="ent-block">
           <div class="ent-block-head">
-            <span>Game cabinet</span>
+            <span>Your Games</span>
             <span data-role="game-count"></span>
           </div>
           <div class="ent-album-grid" data-role="games"></div>
@@ -1700,7 +1675,6 @@ function createGamesApp(): PhoneApp {
         <div class="ent-now-card">
           <div class="ent-art" data-role="art" aria-hidden="true"></div>
           <div class="ent-now-copy">
-            <p class="phone-eyebrow">CABINET STATUS</p>
             <h3 data-role="title"></h3>
             <p data-role="subtitle"></p>
             <p class="ent-status" data-role="status"></p>
@@ -1732,7 +1706,7 @@ function createGamesApp(): PhoneApp {
         </div>
         <div class="ent-block">
           <div class="ent-block-head">
-            <span>Quick notes</span>
+            <span>About This Game</span>
             <span data-role="note-meta"></span>
           </div>
           <p class="ent-summary" data-role="summary"></p>
@@ -1831,7 +1805,7 @@ function createGamesApp(): PhoneApp {
         status.textContent = state.running ? 'Running a live session' : 'Ready to launch'
         sessionScore.textContent = String(state.sessionScore)
         highScore.textContent = String(best)
-        launch.textContent = state.running ? 'Stop' : 'Launch'
+        launch.textContent = state.running ? 'Stop' : 'Play'
         launch.setAttribute('aria-pressed', String(state.running))
         round.disabled = !state.running
         favorite.textContent = favorited ? 'Favorited' : 'Favorite'

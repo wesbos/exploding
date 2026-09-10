@@ -139,6 +139,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  scrollbar-width: none;
 }
 .productivity-empty {
   margin: 0;
@@ -289,6 +290,7 @@
   color: #fff;
   font-size: 24px;
 }
+.productivity-list-symbol svg { width: 20px; height: 20px; }
 .productivity-list-button strong { font-size: 17px; font-weight: 400; }
 .productivity-list-badge { color: #8e8e93; }
 .productivity-reminders-editor { background: #fff; padding-bottom: 8px; }
@@ -346,7 +348,7 @@
 }
 .productivity-clock-card strong { display: block; font-size: 26px; font-weight: 400; }
 .productivity-clock-card .productivity-label { display: block; font-size: 13px; }
-.productivity-clock-card-time { font-size: 29px; font-weight: 300; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.productivity-clock-card-time { font-size: 36px; font-weight: 300; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .productivity-clock-card .productivity-icon-button { color: #ff9500; }
 .productivity-stopwatch {
   display: flex;
@@ -405,5 +407,5 @@
   color: #8e8e93;
   font-size: 11px !important;
 }
-.productivity-clock-tabs button span { font-size: 25px; line-height: 1; }
+.productivity-clock-tabs svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
 .productivity-clock-tabs [aria-pressed=true] { color: #ff9500; }
