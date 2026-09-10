@@ -24,6 +24,9 @@ a { color: inherit; text-underline-offset: 4px; }
 .brand { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; font-size: 11px; font-weight: 600; letter-spacing: .18em; }
 .brand-mark { width: 11px; height: 11px; background: #d3dbbe; border-radius: 2px; transform: rotate(-12deg); }
 .brand-divider { color: #69706e; margin-inline: 5px; }
+.model-switch { display: flex; gap: 15px; font: 10px var(--mono); }
+.model-switch a { color: #9ba996; text-decoration: none; padding-block: 14px; }
+.model-switch a[aria-current] { color: #e0e5d9; }
 .edition, .eyebrow, .footer p, .stage-meta, .parts-heading, .stage-tools, .explosion-controls label, .explosion-endpoints, #caption-number {
   margin: 0;
   color: var(--muted);
