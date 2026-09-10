@@ -59,7 +59,7 @@ Seven isolated Copilot worktrees own the app groups below. Each linked survey re
 - Instances retain in-memory state, while optional `onActivate()` / `onDeactivate()` hooks manage foreground resources. Home, app switching, preview dismissal, hiding the document, and hiding the Duo display deactivate the foreground app. Returning activates it without implicitly granting hardware permissions.
 - Cross-app navigation uses a bubbling, cancelable `duo:open-app` event with `{ name: string }`, accepting an exact app name or ID. The shell prevents default only when the app exists.
 - Settings persist under `duo-system-settings`, with a `prefs` object containing `darkMode`, `largeText`, `reduceMotion`, and `brightness` (10–100). A window `duo:preferences-change` event updates the current shell. These preferences affect this app interface, not macOS, iOS, radios, or physical display brightness. Dark appearance converts light app surfaces; it is not native iOS dynamic-color rendering.
-- Status bars show the actual local time and browser connection status, not fictional cellular reception or battery charge.
+- Status bars show the actual local time. The user-approved iOS cellular/battery artwork is explicitly labeled illustrative; browser connection status is exposed separately in its accessible description.
 - Existing browser data must not be silently erased, overwritten on parse errors, or reported as saved after a storage failure. Media uses browser storage rather than pretending a thumbnail represents saved audio/video.
 
 ## Delivery stages and acceptance
