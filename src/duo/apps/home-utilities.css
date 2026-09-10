@@ -1,0 +1,290 @@
+.phone-software[data-app=wallet] {
+  --phone-wallpaper: #000;
+  color: #fff;
+  color-scheme: dark;
+}
+
+.phone-software[data-app=find-my] {
+  --phone-wallpaper: #f2f2f7;
+  color: #000;
+  color-scheme: light;
+}
+
+.phone-software[data-app=home] {
+  --phone-wallpaper: #536762;
+  color: #fff;
+  color-scheme: dark;
+}
+
+.phone-software[data-app=itunes-store] {
+  --phone-wallpaper: #fff;
+  color: #000;
+  color-scheme: light;
+}
+
+.home-utility-app {
+  --utility-secondary: #8e8e93;
+  --utility-group: #fff;
+  --utility-separator: #c6c6c8;
+  --utility-accent: #007aff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  gap: 16px;
+  padding: 12px 20px 20px;
+  overflow: auto;
+  scrollbar-width: none;
+  font: 17px/1.3 -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+}
+.home-utility-app > * { flex-shrink: 0; }
+.home-utility-app h2,
+.home-utility-app h3,
+.home-utility-app h4,
+.home-utility-app p { margin: 0; }
+.home-utility-app h2 { font-size: 34px; line-height: 1.18; font-weight: 700; letter-spacing: .01em; }
+.home-utility-app h3 { font-size: 24px; font-weight: 700; line-height: 1.2; }
+.home-utility-app h4 { font-size: 20px; font-weight: 600; }
+.home-utility-app button { min-height: 44px; border: 0; color: inherit; }
+.home-utility-app button:disabled { opacity: .45; cursor: default; }
+.home-utility-app .home-utility-copy { margin-top: 8px; color: var(--utility-secondary); font-size: 13px; line-height: 1.4; }
+.home-utility-stat { display: flex; align-items: baseline; gap: 8px; margin-top: 14px; font-size: 13px; color: var(--utility-secondary); }
+.home-utility-stat strong { font-size: 17px; font-weight: 600; color: inherit; }
+.home-utility-tabs { display: flex; align-items: stretch; gap: 2px; padding: 2px; border-radius: 9px; background: #e9e9ed; }
+.home-utility-app .home-utility-tab { flex: 1; min-width: 0; padding: 6px 8px; background: none; border-radius: 7px; font-size: 15px; text-align: center; }
+.home-utility-tab[aria-pressed=true] { font-weight: 600; }
+.home-utility-app .home-utility-tab[aria-pressed=true] { background: #fff; box-shadow: 0 1px 3px #0002; }
+.home-utility-list { display: flex; flex-direction: column; }
+.home-utility-app .home-utility-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  background: none;
+  border-bottom: .5px solid var(--utility-separator);
+  border-radius: 0;
+  text-align: left;
+}
+.home-utility-row:last-child { border-bottom: 0; }
+.home-utility-row-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: #e5e5ea; }
+.home-utility-row-icon svg { width: 26px; height: 26px; }
+.home-utility-row-copy { display: flex; flex-direction: column; min-width: 0; gap: 3px; }
+.home-utility-row-copy strong { font-size: 17px; font-weight: 600; line-height: 1.25; }
+.home-utility-muted { color: var(--utility-secondary); font-size: 15px; }
+.home-utility-row-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; font-size: 15px; text-align: right; }
+.home-utility-row-meta small { font-size: 13px; color: var(--utility-secondary); }
+.home-utility-card { padding: 16px; background: var(--utility-group); border-radius: 12px; }
+.home-utility-app .home-utility-action { padding: 10px 16px; border-radius: 10px; font-size: 17px; font-weight: 600; color: var(--utility-accent); background: #f2f2f7; text-align: center; }
+.home-utility-app .home-utility-action--primary { background: var(--utility-accent); color: #fff; }
+.home-utility-pill { font-size: 13px; color: var(--utility-secondary); }
+.home-utility-empty { font-size: 17px; color: var(--utility-secondary); padding: 20px 0; }
+.wallet-hero-top,
+.wallet-detail-header,
+.wallet-panel-header,
+.findmy-detail-top,
+.home-hero-top,
+.home-accessories-top,
+.itunes-detail-top,
+.itunes-highlights-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.wallet-hero-label,
+.wallet-detail-label,
+.findmy-detail-group,
+.home-hero-label,
+.home-accessories-label,
+.itunes-hero-kicker,
+.itunes-detail-badge { color: var(--utility-secondary); font-size: 13px; margin-bottom: 5px !important; }
+.wallet-panel-subtitle,
+.wallet-chip,
+.wallet-detail-status,
+.findmy-detail-status,
+.home-hero-chip,
+.home-accessories-count,
+.itunes-owned-count { font-size: 13px; color: var(--utility-secondary); }
+.wallet-detail-meta,
+.findmy-detail-meta,
+.itunes-detail-meta { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 16px; font-size: 15px; }
+.wallet-detail-meta > div,
+.findmy-detail-meta > div,
+.itunes-detail-meta > div { padding: 10px 0; border-bottom: .5px solid var(--utility-separator); }
+.wallet-detail-meta > div:nth-child(odd),
+.findmy-detail-meta > div:nth-child(odd),
+.itunes-detail-meta > div:nth-child(odd) { color: var(--utility-secondary); }
+.wallet-detail-meta > div:nth-child(even),
+.findmy-detail-meta > div:nth-child(even),
+.itunes-detail-meta > div:nth-child(even) { text-align: right; }
+.wallet-detail-meta > div:nth-last-child(-n+2),
+.findmy-detail-meta > div:nth-last-child(-n+2),
+.itunes-detail-meta > div:nth-last-child(-n+2) { border: 0; }
+
+/* Wallet's primary surface is the pass stack, not a balance dashboard. */
+.wallet-app { --utility-group: #1c1c1e; --utility-separator: #38383a; --utility-secondary: #98989d; }
+.wallet-app .wallet-tabs { background: #1c1c1e; }
+.wallet-app .home-utility-tab[aria-pressed=true] { background: #48484a; }
+.wallet-summary-label { display: none; }
+.wallet-summary strong { color: #fff; }
+.wallet-list { padding: 4px 0 18px; }
+.wallet-app .wallet-row {
+  position: relative;
+  height: 208px;
+  padding: 22px;
+  border: 0;
+  border-radius: 14px;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto 1fr;
+  align-items: start;
+  gap: 8px;
+  box-shadow: 0 -3px 9px #0005;
+}
+.wallet-app .wallet-row + .wallet-row { margin-top: -99px; }
+.wallet-pass-brand { grid-column: 2; grid-row: 1; font-size: 15px; font-weight: 700; }
+.wallet-row .home-utility-row-copy { grid-row: 1; grid-column: 1; }
+.wallet-row .home-utility-row-copy strong { font-size: 22px; font-weight: 700; }
+.wallet-row .home-utility-muted { color: inherit; opacity: .7; font-size: 13px; }
+.wallet-row .home-utility-row-meta { grid-column: 1 / -1; align-self: end; align-items: flex-start; }
+.wallet-row .home-utility-row-meta span { font-size: 24px; font-weight: 600; }
+.wallet-row .home-utility-row-meta small { color: inherit; opacity: .7; }
+.wallet-row.is-selected::after { content: ''; position: absolute; right: 22px; bottom: 22px; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.wallet-app .wallet-hero { background: none; padding: 0; }
+.wallet-app .wallet-hero-label { display: none; }
+.wallet-app .wallet-hero-name { font-size: 28px; }
+.wallet-card-face { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; height: 216px; padding: 22px; border-radius: 14px; margin-top: 16px; }
+.wallet-card-symbol { align-self: flex-start; font-size: 36px; }
+.wallet-card-meta { display: block; font-size: 15px; opacity: .7; }
+.wallet-card-value { display: block; font-size: 30px; font-weight: 600; margin-top: 6px; }
+.wallet-hero-pills { display: flex; gap: 8px; margin: 14px 0 0; }
+.wallet-hero-pills .home-utility-pill + .home-utility-pill::before { content: '·'; margin-right: 8px; }
+.wallet-activity-detail { display: grid; gap: 12px; order: 3; }
+.wallet-activity-panel { order: 2; }
+.wallet-app .wallet-detail-title { font-size: 22px; }
+.wallet-panel-header { margin-bottom: 8px; }
+.wallet-app .wallet-activity-row { grid-template-columns: minmax(0, 1fr) auto; }
+.wallet-activity-row.is-selected .home-utility-row-copy strong { color: #64d2ff; }
+.wallet-activity-row .home-utility-muted { font-size: 13px; }
+
+/* An illustrative street map sits behind opaque Find My sheets and rows. */
+.findmy-app { padding: 0; gap: 0; background: #fff; }
+.findmy-app .findmy-map { position: relative; flex: 0 0 242px; height: 242px; overflow: hidden; background: #e9e8df; }
+.findmy-map-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.findmy-map-pins,
+.findmy-overview-pins { position: absolute; inset: 0; }
+.findmy-app .home-utility-header { position: relative; padding: 26px 20px 12px; border-radius: 18px 18px 0 0; background: #fff; margin-top: -14px; z-index: 1; }
+.findmy-app .home-utility-header::before,
+.findmy-detail::before { content: ''; position: absolute; width: 36px; height: 5px; border-radius: 3px; background: #d1d1d6; top: 8px; left: calc(50% - 18px); }
+.findmy-app .home-utility-header h2 { font-size: 28px; }
+.findmy-app .home-utility-copy { margin-top: 4px; }
+.findmy-summary { display: none; }
+.findmy-list { padding: 0 20px; }
+.findmy-app .findmy-row { min-height: 82px; }
+.findmy-row.is-selected .home-utility-row-icon { background: #e0eefe; color: #007aff; }
+.findmy-row .home-utility-muted,
+.findmy-row .home-utility-row-meta span { font-size: 13px; }
+.findmy-row .home-utility-row-meta { max-width: 120px; }
+.findmy-app .findmy-tabs { position: sticky; bottom: 0; margin-top: auto; padding: 8px 20px 4px; border-top: .5px solid #c6c6c8; border-radius: 0; background: #f9f9f9; z-index: 2; }
+.findmy-app .findmy-tabs .home-utility-tab { display: grid; justify-items: center; gap: 3px; font-size: 13px; color: #8e8e93; background: none; box-shadow: none; }
+.findmy-tabs .home-utility-tab svg { width: 24px; height: 24px; }
+.findmy-app .findmy-tabs .home-utility-tab[aria-pressed=true] { color: #007aff; }
+.findmy-app .findmy-pin { position: absolute; width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 3px solid #fff; color: #4c5653; padding: 0; transform: translate(-50%, -50%); box-shadow: 0 2px 5px #0003; }
+.findmy-pin > span { display: grid; place-items: center; height: 100%; border-radius: 50%; background: var(--pin-accent); font-size: 15px; font-weight: 600; }
+.findmy-pin svg { width: 26px; height: 26px; }
+.findmy-pin small { position: absolute; top: 45px; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 600; white-space: nowrap; text-shadow: 0 1px #fff, 1px 0 #fff, -1px 0 #fff, 0 -1px #fff; }
+.findmy-app .findmy-pin.is-selected { outline: 3px solid #007aff; outline-offset: 1px; z-index: 1; }
+.findmy-pin.is-ringing { animation: findmy-ring 1s ease-out infinite; }
+.findmy-map-label { position: absolute; bottom: 20px; left: 20px; right: 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; pointer-events: none; }
+.findmy-map-title { font-size: 15px; padding: 4px 8px; background: #fff; border-radius: 4px; box-shadow: 0 1px 3px #0001; }
+.findmy-map-zone,
+.findmy-map-subtitle { display: none; }
+.findmy-app .findmy-detail { position: relative; z-index: 1; display: grid; gap: 12px; padding: 28px 20px 20px; border-radius: 18px 18px 0 0; margin-top: -14px; }
+.findmy-detail-top { align-items: flex-start; }
+.findmy-app .findmy-detail-title { font-size: 24px; }
+.findmy-detail-status { max-width: 110px; text-align: right; }
+.findmy-note { font-size: 13px; color: #8e8e93; }
+.findmy-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.findmy-app .findmy-actions .home-utility-action { flex: 1; padding: 12px 8px; font-size: 15px; }
+@keyframes findmy-ring {
+  0% { box-shadow: 0 0 0 0 #007aff55; }
+  100% { box-shadow: 0 0 0 18px #007aff00; }
+}
+
+/* Home: room navigation and scenes lead to a two-column accessory grid. */
+.home-app { --utility-secondary: #d8e0dd; --utility-group: #6c7e79; --utility-separator: #879791; --utility-accent: #ff9f0a; }
+.home-app .home-section-title { font-size: 22px; margin: 8px 0 -4px; }
+.home-app .home-scenes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 0; gap: 10px; background: none; }
+.home-app .home-scenes .home-utility-tab { min-height: 56px; border-radius: 12px; background: #6c7e79; text-align: left; padding: 12px 16px; font-size: 17px; font-weight: 600; }
+.home-app .home-scenes .home-utility-tab[aria-pressed=true] { background: #fff; color: #1c1c1e; box-shadow: none; }
+.home-rooms { border-radius: 12px; overflow: hidden; background: #6c7e79; padding: 0 16px; }
+.home-app .home-room-row { grid-template-columns: 32px minmax(0, 1fr) auto; }
+.home-room-row .home-utility-row-icon { width: 30px; height: 30px; background: none; color: #d8e0dd; }
+.home-room-row.is-selected .home-utility-row-icon { color: #ffd60a; }
+.home-room-row .home-utility-muted { font-size: 13px; }
+.home-room-row .home-utility-row-meta { font-size: 13px; }
+.home-app .home-hero { padding: 0; border-radius: 0; background: none; }
+.home-app .home-hero-title { font-size: 34px; }
+.home-app .home-hero-label { display: none; }
+.home-hero-chip { white-space: nowrap; }
+.home-hero-panel { display: flex; align-items: stretch; gap: 12px; margin-top: 18px; }
+.home-hero-panel > div { display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border-radius: 12px; background: #6c7e79; }
+.home-hero-panel > div:first-child { flex: 0 0 100px; }
+.home-hero-panel > div:last-child { flex: 1; }
+.home-hero-panel-label { color: #d8e0dd; font-size: 13px; }
+.home-hero-panel strong { font-size: 17px; font-weight: 600; }
+.home-hero-panel .home-hero-climate { font-size: 26px; }
+.home-app .home-hero-note { margin-top: 12px; font-size: 13px; color: #d8e0dd; }
+.home-accessory-categories { display: flex; gap: 6px; }
+.home-app .home-accessory-category { flex: 1; padding: 8px 2px; display: grid; justify-items: center; gap: 5px; border-radius: 10px; background: #6c7e79; font-size: 13px; }
+.home-accessory-category svg { width: 22px; height: 22px; }
+.home-app .home-accessory-category[aria-pressed=true] { background: #fff; color: #25302d; }
+.home-app .home-accessories { padding: 0; background: none; }
+.home-accessories-top { margin-bottom: 14px; }
+.home-app .home-accessories-label { display: none; }
+.home-accessories-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.home-accessories-list .home-utility-empty { grid-column: 1 / -1; }
+.home-app .home-accessory-toggle { display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 16px; min-height: 132px; padding: 16px; background: #6c7e79; border-radius: 14px; text-align: left; }
+.home-app .home-accessory-toggle[aria-pressed=true] { background: #fff; color: #1c1c1e; }
+.home-accessory-icon { color: #d8e0dd; width: 30px; height: 30px; }
+.home-accessory-icon svg { width: 100%; height: 100%; }
+.home-accessory-toggle[aria-pressed=true] .home-accessory-icon { color: #e99700; }
+.home-accessory-copy { display: flex; flex-direction: column; gap: 3px; }
+.home-accessory-copy strong { font-size: 17px; font-weight: 600; }
+.home-accessory-copy span { font-size: 15px; color: #d8e0dd; }
+.home-accessory-toggle[aria-pressed=true] .home-accessory-copy span { color: #6c6c70; }
+
+/* iTunes retains the older, opaque store chrome and compact product list. */
+.itunes-app { --utility-accent: #007aff; --utility-secondary: #6c6c70; gap: 14px; }
+.itunes-app .home-utility-header h2 { font-size: 34px; }
+.itunes-summary { margin-top: 8px; }
+.itunes-summary strong { color: #007aff; font-size: 13px; font-weight: 400; }
+.itunes-app .itunes-search-input { width: 100%; min-height: 44px; padding: 10px 12px; border: 0; border-radius: 10px; background: #efeff0; color: #000; font: inherit; }
+.itunes-search-input::placeholder { color: #8e8e93; }
+.itunes-app .itunes-categories { border-radius: 0; background: none; padding: 0; border-bottom: .5px solid #c6c6c8; }
+.itunes-app .itunes-categories .home-utility-tab { padding: 8px 4px; border-radius: 0; color: #6c6c70; font-size: 15px; }
+.itunes-app .itunes-categories .home-utility-tab[aria-pressed=true] { color: #007aff; box-shadow: inset 0 -2px #007aff; background: none; }
+.itunes-app .itunes-row { grid-template-columns: 58px minmax(0, 1fr) auto; padding: 10px 0; }
+.itunes-row .home-utility-row-copy strong { font-weight: 400; }
+.itunes-row .home-utility-muted { font-size: 13px; }
+.itunes-row .home-utility-row-meta span { color: #007aff; font-size: 15px; }
+.itunes-row .home-utility-row-meta small { font-size: 13px; }
+.itunes-row.is-selected .home-utility-row-copy strong { color: #007aff; }
+.itunes-row-art { width: 58px; height: 58px; position: relative; overflow: hidden; border-radius: 3px; }
+.itunes-row-art span { position: absolute; bottom: 6px; left: 6px; right: 6px; color: #fff; font-size: 10px; line-height: 1.15; font-weight: 700; text-shadow: 0 1px 2px #0007; }
+.itunes-app .itunes-hero { display: grid; grid-template-columns: 148px 1fr; gap: 16px; padding: 0 0 20px; border-radius: 0; border-bottom: .5px solid #c6c6c8; }
+.itunes-art { position: relative; aspect-ratio: 1; border-radius: 4px; overflow: hidden; background: var(--itunes-accent); }
+.itunes-art::before { content: ''; position: absolute; width: 100px; height: 100px; border: 1px solid #ffffff80; border-radius: 50%; top: 12px; left: 24px; }
+.itunes-art-label { position: absolute; bottom: 12px; left: 12px; right: 12px; color: #fff; font-size: 22px; line-height: 1.1; font-weight: 700; text-shadow: 0 1px 3px #0005; }
+.itunes-hero-copy { align-self: center; min-width: 0; }
+.itunes-app .itunes-hero-title { font-size: 24px; }
+.itunes-app .itunes-hero-artist { margin-top: 8px; color: #007aff; font-size: 17px; }
+.itunes-app .itunes-detail { display: grid; gap: 16px; padding: 0; }
+.itunes-app .itunes-detail-title { font-size: 20px; }
+.itunes-detail-price { color: #007aff; white-space: nowrap; font-size: 17px; }
+.itunes-app .itunes-detail-description { font-size: 15px; color: #6c6c70; line-height: 1.4; }
+.itunes-app .itunes-buy { justify-self: start; min-width: 120px; padding: 10px 20px; border-radius: 7px; background: #007aff; color: #fff; }
+.itunes-app .itunes-buy:disabled { background: #f2f2f7; color: #8e8e93; opacity: 1; }
+.itunes-app .itunes-highlights { padding: 16px 0 0; border-top: .5px solid #c6c6c8; border-radius: 0; }
+.itunes-highlights-list { display: grid; gap: 8px; margin-top: 14px; }
+.itunes-highlights-list .home-utility-pill { font-size: 15px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .findmy-pin.is-ringing { animation: none; }
+}

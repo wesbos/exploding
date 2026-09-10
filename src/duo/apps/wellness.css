@@ -1,0 +1,212 @@
+.phone-software[data-app=health] {
+  --phone-wallpaper: #f2f2f7;
+  color: #000;
+  color-scheme: light;
+}
+
+.phone-software[data-app=fitness],
+.phone-software[data-app=watch] {
+  --phone-wallpaper: #000;
+  color: #fff;
+  color-scheme: dark;
+}
+
+.wellness-panel {
+  --wellness-group: #fff;
+  --wellness-secondary: #6c6c70;
+  --wellness-separator: #c6c6c8;
+  --wellness-accent: #ff2d55;
+  height: 100%;
+  min-height: 0;
+  padding: 12px 20px 20px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font: 17px/1.3 -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  scrollbar-width: none;
+}
+
+.wellness-panel.fitness-panel,
+.wellness-panel.watch-panel {
+  --wellness-group: #1c1c1e;
+  --wellness-secondary: #98989d;
+  --wellness-separator: #38383a;
+  --wellness-accent: #a6ff00;
+}
+
+.wellness-panel.watch-panel { --wellness-accent: #ff9f0a; }
+.wellness-panel > * { flex-shrink: 0; }
+.wellness-panel h2,
+.wellness-panel h3,
+.wellness-panel p { margin: 0; }
+.wellness-panel h2 { font-size: 34px; line-height: 1.18; font-weight: 700; letter-spacing: .01em; }
+.wellness-panel h3 { font-size: 22px; font-weight: 700; line-height: 1.2; }
+.wellness-panel button { border: 0; color: inherit; text-align: left; min-height: 44px; }
+.wellness-panel button:disabled { opacity: .4; cursor: default; }
+.wellness-card { padding: 16px; border-radius: 12px; background: var(--wellness-group); }
+.wellness-panel .wellness-kicker,
+.wellness-panel .wellness-demo { font-size: 13px; line-height: 1.4; color: var(--wellness-secondary); }
+.wellness-panel .wellness-kicker { margin-bottom: 4px; }
+.wellness-panel .wellness-demo { margin-top: 6px; }
+.wellness-panel .wellness-section-title { margin: 0; font-size: 22px; }
+.wellness-card-head,
+.health-summary-head,
+.fitness-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.health-summary,
+.health-log,
+.health-history,
+.fitness-history,
+.fitness-studio,
+.fitness-summary,
+.watch-face,
+.watch-settings,
+.watch-device-list { display: flex; flex-direction: column; gap: 16px; }
+.wellness-panel :is(.health-summary-badge, .health-history-count, .fitness-history-count, .fitness-status, .fitness-streak, .watch-sync-state, .watch-face-name) {
+  font-size: 13px;
+  color: var(--wellness-secondary);
+  text-align: right;
+}
+
+/* Health uses separate metric tiles, not activity rings. */
+.health-panel .health-hero { background: none; padding: 0; }
+.health-panel .health-hero h2 { display: flex; align-items: center; justify-content: space-between; }
+.health-profile { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; color: #ff2d55; background: #e5e5ea; font-size: 24px; }
+.health-category-strip { margin-top: 20px; display: flex; padding: 2px; border-radius: 9px; background: #e3e3e8; }
+.health-panel .health-chip { flex: 1; padding: 4px 6px; border-radius: 7px; background: none; font-size: 15px; text-align: center; }
+.health-panel .health-chip[aria-pressed=true] { background: #fff; font-weight: 600; box-shadow: 0 1px 3px #0002; }
+.health-panel .health-metrics { display: grid; padding: 0; gap: 10px; background: none; margin-top: -10px; }
+.health-panel .health-metric {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) 12px;
+  position: relative;
+  gap: 5px 5px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #fff;
+  min-height: 116px;
+}
+.health-metric-emoji { color: var(--metric-color); font-size: 21px; align-self: start; line-height: 1; }
+.health-metric-copy { display: flex; flex-direction: column; gap: 4px; }
+.health-metric-copy strong { color: var(--metric-color); font-size: 17px; font-weight: 600; }
+.health-metric-copy span { color: #8e8e93; font-size: 13px; }
+.health-metric-value { grid-column: 1 / 3; font-size: 28px; font-weight: 700; line-height: 1.1; margin-top: 5px; }
+.health-metric-chevron { position: absolute; top: 12px; right: 16px; color: #c7c7cc; font-size: 24px; }
+.health-metric-bar { grid-column: 1 / -1; height: 3px; border-radius: 2px; background: #f2f2f7; overflow: hidden; margin-top: 5px; }
+.health-metric-bar i { display: block; height: 100%; }
+.health-panel .health-metric[aria-pressed=true] { box-shadow: inset 3px 0 var(--metric-color); }
+.health-chart { height: 174px; display: flex; gap: 16px; padding: 12px 10px 26px; border-top: .5px solid #d1d1d6; border-bottom: .5px solid #d1d1d6; }
+.health-chart-day { position: relative; flex: 1; display: flex; align-items: flex-end; border-bottom: .5px solid #c7c7cc; }
+.health-chart-day i { width: 100%; background: var(--metric-color); border-radius: 3px 3px 0 0; }
+.health-chart-day span { position: absolute; top: calc(100% + 6px); width: 100%; color: #8e8e93; font-size: 13px; text-align: center; }
+.health-summary-foot,
+.fitness-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.health-stat,
+.fitness-stat,
+.fitness-summary-item { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.health-stat span,
+.fitness-stat span,
+.fitness-summary-item span { font-size: 13px; color: var(--wellness-secondary); }
+.health-stat strong { font-size: 17px; font-weight: 600; }
+.health-form,
+.wellness-field { display: grid; gap: 10px; }
+.wellness-field span { font-size: 15px; }
+.wellness-field input,
+.wellness-field textarea { min-height: 44px; width: 100%; border: .5px solid #c6c6c8; border-radius: 8px; padding: 10px 12px; color: inherit; background: #f2f2f7; font: inherit; resize: vertical; }
+.wellness-panel .wellness-action,
+.wellness-panel .health-fill-goal,
+.wellness-panel .watch-unpair,
+.wellness-panel .fitness-secondary { padding: 10px 16px; border-radius: 9px; font-size: 17px; text-align: center; font-weight: 600; }
+.health-panel .wellness-action { color: #fff; background: #ff2d55; }
+.health-panel .health-fill-goal { background: none; color: #ff2d55; padding-right: 0; font-size: 15px; }
+.health-history-list,
+.fitness-history-list { display: grid; }
+.health-history-item,
+.fitness-history-item { padding: 12px 0; display: grid; grid-template-columns: 1fr auto; gap: 12px; border-bottom: .5px solid var(--wellness-separator); }
+.health-history-item:last-child,
+.fitness-history-item:last-child { border: 0; padding-bottom: 0; }
+.health-history-item > div,
+.fitness-history-copy { display: flex; flex-direction: column; gap: 4px; }
+.health-history-item strong,
+.fitness-history-item strong { font-size: 17px; font-weight: 600; }
+.health-history-item span,
+.health-history-item time,
+.fitness-history-copy span,
+.fitness-history-meta { font-size: 13px; color: var(--wellness-secondary); }
+
+/* Three concentric Move, Exercise and Stand rings share one center. */
+.fitness-panel .fitness-ringboard { padding: 0; background: none; }
+.fitness-ringboard .wellness-section-title { margin-top: 24px; }
+.fitness-rings { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; gap: 16px; padding: 16px 0; }
+.fitness-activity-rings { width: 100%; height: auto; overflow: visible; }
+.fitness-ring-legend { display: grid; gap: 12px; }
+.fitness-ring-inner { display: flex; flex-direction: column; color: var(--tone); }
+.fitness-ring-inner strong { font-size: 17px; font-weight: 600; }
+.fitness-ring-inner span { font-size: 21px; font-weight: 700; letter-spacing: -.02em; white-space: nowrap; }
+.fitness-stats { padding: 14px 16px; border-radius: 12px; background: #1c1c1e; }
+.fitness-stat strong { font-size: 24px; font-weight: 600; }
+.fitness-history-item { grid-template-columns: 40px 1fr auto; align-items: center; }
+.fitness-history-icon { font-size: 26px; color: #a6ff00; }
+.fitness-description { font-size: 15px; color: #98989d; }
+.fitness-types { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fitness-panel .fitness-type { display: flex; align-items: center; gap: 10px; background: #2c2c2e; padding: 12px; border-radius: 10px; }
+.fitness-panel .fitness-type[aria-pressed=true] { background: #3a3a3c; box-shadow: inset 0 0 0 1px #a6ff00; }
+.fitness-type-emoji { font-size: 24px; }
+.fitness-type-copy { display: grid; gap: 3px; }
+.fitness-type-copy strong { font-size: 17px; font-weight: 600; }
+.fitness-type-copy > span { font-size: 13px; color: #98989d; }
+.fitness-session { padding-top: 16px; border-top: .5px solid #38383a; }
+.fitness-session-clock { font-size: 60px; font-weight: 500; font-variant-numeric: tabular-nums; color: #d8ff00; letter-spacing: -.02em; }
+.fitness-session-label { font-size: 17px; margin-top: 6px; }
+.fitness-session-meta { color: #98989d; font-size: 15px; margin-top: 4px; }
+.fitness-session-actions { display: flex; gap: 10px; margin-top: 18px; }
+.fitness-panel .wellness-action { color: #000; background: #a6ff00; flex: 1; }
+.fitness-panel .fitness-secondary { background: #3a3a3c; }
+.fitness-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.fitness-summary-item strong { font-size: 22px; color: #a6ff00; font-weight: 500; }
+.fitness-summary-item:first-child strong { color: #fdd54e; }
+.fitness-summary-item:nth-child(2) strong { color: #fa114f; }
+.fitness-empty { font-size: 15px; color: #98989d; }
+
+/* Watch: black canvas, inset grouped rows, orange actions and system switches. */
+.watch-panel .watch-device { background: none; padding: 0; }
+.watch-device-illustration { height: 144px; display: grid; place-items: center; margin: 20px 0; }
+.watch-device-illustration span { position: relative; display: grid; place-items: center; width: 96px; height: 114px; border: 5px solid #76767a; outline: 2px solid #343436; border-radius: 27px; background: #000; color: #ff9f0a; font-size: 28px; font-weight: 600; box-shadow: 0 -20px 0 -7px #39393b, 0 20px 0 -7px #39393b; }
+.watch-device-copy { display: grid; gap: 5px; }
+.watch-device-copy strong { font-size: 17px; font-weight: 600; }
+.watch-device-copy span { font-size: 13px; color: #98989d; }
+.watch-device-actions { display: flex; margin-top: 16px; gap: 12px; }
+.watch-panel .watch-sync { background: #1c1c1e; color: #ff9f0a; flex: 1; }
+.watch-panel .watch-unpair { color: #ff453a; background: #1c1c1e; }
+.watch-panel .watch-device-list,
+.watch-panel .watch-settings { background: none; padding: 0; }
+.watch-panel .watch-device-list h3,
+.watch-panel .watch-settings h3 { font-size: 17px; font-weight: 600; }
+.watch-devices,
+.watch-toggle-list { overflow: hidden; background: #1c1c1e; border-radius: 10px; }
+.watch-panel .watch-device-option { display: grid; grid-template-columns: 24px 1fr auto; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; background: none; border-bottom: .5px solid #38383a; }
+.watch-device-option:last-child { border-bottom: 0; }
+.watch-device-option small { font-size: 13px; color: #98989d; }
+.watch-device-dot { border: 2px solid #8e8e93; width: 18px; height: 25px; border-radius: 5px; }
+.watch-device-option[aria-checked=true] .watch-device-dot { border-color: #ff9f0a; background: #332308; }
+.watch-face-preview { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 170px; height: 195px; margin: 6px auto; border: 6px solid #636366; border-radius: 42px; background: #000; box-shadow: inset 0 0 0 2px #111; }
+.watch-face-time { font-size: 48px; font-weight: 600; color: var(--face-color); letter-spacing: -.04em; }
+.watch-face-glance { max-width: 15ch; text-align: center; font-size: 13px; color: #98989d; }
+.watch-faces { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.watch-panel .watch-face-option { flex: 0 0 90px; background: none; padding: 6px 0; text-align: center; }
+.watch-face-swatch { display: block; width: 52px; height: 62px; margin: 0 auto 8px; border: 5px solid #48484a; border-radius: 16px; box-shadow: inset 0 0 0 13px #000; }
+.watch-face-option[aria-pressed=true] .watch-face-swatch { border-color: #ff9f0a; }
+.watch-face-option-copy strong { font-size: 13px; font-weight: 500; }
+.watch-face-option-copy > span { display: none; }
+.watch-panel .watch-toggle { display: flex; justify-content: space-between; align-items: center; gap: 16px; width: 100%; min-height: 64px; padding: 12px 16px; border-bottom: .5px solid #38383a; background: none; }
+.watch-toggle:last-child { border-bottom: 0; }
+.watch-toggle-copy { display: flex; flex-direction: column; gap: 4px; }
+.watch-toggle-copy strong { font-size: 17px; font-weight: 400; }
+.watch-toggle-copy > span { color: #98989d; font-size: 13px; }
+.watch-toggle-state { position: relative; width: 51px; height: 31px; border-radius: 16px; background: #39393d; flex: 0 0 51px; font-size: 0; }
+.watch-toggle-state::after { content: ''; position: absolute; left: 2px; top: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff; box-shadow: 0 2px 3px #0003; transition: transform .15s; }
+.watch-toggle[aria-pressed=true] .watch-toggle-state { background: #30d158; }
+.watch-toggle[aria-pressed=true] .watch-toggle-state::after { transform: translateX(20px); }
+@media (prefers-reduced-motion: reduce) {
+  .watch-toggle-state::after { transition: none; }
+}

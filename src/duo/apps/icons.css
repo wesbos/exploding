@@ -1,0 +1,40 @@
+/* Full-tile coordinates: artwork already includes the native icon margins. */
+.app-icon {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  flex: none;
+  overflow: hidden;
+  isolation: isolate;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 22.5%;
+}
+
+@supports (corner-shape: squircle) {
+  .app-icon {
+    corner-shape: squircle;
+    border-radius: 45%;
+  }
+}
+
+.app-icon[data-tone='light'] {
+  box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 8%);
+}
+
+.app-icon-glyph {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.app-icon-glyph svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  shape-rendering: geometricPrecision;
+}

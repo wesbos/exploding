@@ -74,29 +74,43 @@ export const calculatorApp: PhoneApp = {
     const left = document.createElement('section')
     left.className = 'calculator-result'
     left.innerHTML = `
-      <p class="phone-eyebrow">A LITTLE ROOM TO THINK</p>
-      <h2>Calculator</h2>
+      <h2>History</h2>
+      <ol class="calculator-history" aria-label="Previous calculations"></ol>
+    `
+    const right = document.createElement('section')
+    right.className = 'calculator-main'
+    right.setAttribute('aria-label', 'Calculator')
+    right.innerHTML = `
       <div class="calculator-readout">
         <p class="calculator-expression"></p>
         <output class="calculator-value" aria-label="Result" aria-live="polite" aria-atomic="true">0</output>
       </div>
-      <p class="calculator-hint">Tap the keys. Or use your keyboard.<br>Backspace to delete. Esc to go home.</p>
+      <div class="calculator-keypad" role="group" aria-label="Calculator keypad"></div>
     `
-    const right = document.createElement('section')
-    right.className = 'calculator-keypad'
-    right.setAttribute('aria-label', 'Calculator keypad')
+    const keypad = right.querySelector('.calculator-keypad')!
     const keys = [
-      ['clear', 'AC', 'Clear all', 'utility'], ['sign', '\u00b1', 'Change sign', 'utility'], ['percent', '%', 'Percent', 'utility'], ['/', '\u00f7', 'Divide', 'operator'],
+      ['backspace', '\u232b', 'Delete last digit', 'utility'], ['clear', 'AC', 'Clear all', 'utility'], ['percent', '%', 'Percent', 'utility'], ['/', '\u00f7', 'Divide', 'operator'],
       ['7', '7'], ['8', '8'], ['9', '9'], ['*', '\u00d7', 'Multiply', 'operator'],
       ['4', '4'], ['5', '5'], ['6', '6'], ['-', '\u2212', 'Subtract', 'operator'],
       ['1', '1'], ['2', '2'], ['3', '3'], ['+', '+', 'Add', 'operator'],
-      ['backspace', '\u232b', 'Delete last digit', 'utility'], ['0', '0'], ['.', '.', 'Decimal point'], ['=', '=', 'Equals', 'operator'],
+      ['sign', '\u00b1', 'Change sign'], ['0', '0'], ['.', '.', 'Decimal point'], ['=', '=', 'Equals', 'operator'],
     ]
     function update(key: string) {
       calculator.input(key)
-      left.querySelector('output')!.textContent = calculator.display
-      left.querySelector('.calculator-expression')!.textContent = calculator.expression
-      left.querySelector('output')!.classList.toggle('long-result', calculator.display.length > 8)
+      right.querySelector('output')!.textContent = calculator.display
+      right.querySelector('.calculator-expression')!.textContent = calculator.expression
+      right.querySelector('output')!.classList.toggle('long-result', calculator.display.length > 8)
+      if (key === '=' && calculator.expression.endsWith('=')) {
+        const entry = document.createElement('li')
+        const expression = document.createElement('span')
+        const result = document.createElement('strong')
+        expression.textContent = calculator.expression
+        result.textContent = calculator.display
+        entry.append(expression, result)
+        const history = left.querySelector('.calculator-history')!
+        history.append(entry)
+        entry.scrollIntoView({ block: 'nearest' })
+      }
       right.querySelectorAll<HTMLButtonElement>('[data-operator]').forEach(button => {
         button.setAttribute('aria-pressed', String(button.dataset.key === calculator.operator))
       })
@@ -105,6 +119,8 @@ export const calculatorApp: PhoneApp = {
       const button = document.createElement('button')
       button.type = 'button'
       button.textContent = label
+      if (key === 'backspace') button.innerHTML = '<svg viewBox="0 0 30 24" aria-hidden="true"><path d="M11 3h14a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H11L2 12zM14 8l8 8m0-8-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>'
+      if (key === 'sign') button.innerHTML = '<svg viewBox="0 0 30 30" aria-hidden="true"><path d="M3 8h10M8 3v10M18 23h10M7 27 23 3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'
       button.dataset.key = key
       button.className = `calculator-key ${kind ?? 'digit'}`
       button.setAttribute('aria-label', name ?? label)
@@ -113,7 +129,7 @@ export const calculatorApp: PhoneApp = {
         button.setAttribute('aria-pressed', 'false')
       }
       button.addEventListener('click', () => update(key))
-      right.append(button)
+      keypad.append(button)
     }
     return {
       left, right,

@@ -1,0 +1,11 @@
+.canvas-support-notice { min-width: 0; margin: 16px 0; padding: 18px 22px; border: 1px solid #a67f43; border-radius: 6px; background: #342c20; color: #eee0c7; font-size: 12px; line-height: 1.7; }
+.canvas-support-notice h2 { margin: 0 0 8px; color: #ffe0a3; font-size: 16px; font-weight: 600; line-height: 1.4; }
+.canvas-support-notice p { margin: 8px 0 0; }
+.canvas-support-notice ol { margin: 12px 0; padding-left: 22px; }
+.canvas-support-notice li + li { margin-top: 6px; }
+.canvas-support-notice code { color: #ffe0a3; font-size: 11px; overflow-wrap: anywhere; user-select: all; }
+.software-preview-header .canvas-support-notice { flex: 1; margin: 0; }
+.software-preview-header .canvas-support-notice p { max-width: none; line-height: inherit; margin: 8px 0 0; }
+@media (max-width: 500px) {
+  .canvas-support-notice { padding: 16px; }
+}

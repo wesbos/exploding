@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { createAppShell, SCREEN_HEIGHT, SCREEN_WIDTH } from './apps/shell'
 import type { createFoldingDisplay } from './display'
 import { wallpaperImage, type WallpaperId } from '../wallpapers'
+import { createCanvasSupportNotice } from './canvas-support'
 
 function supportsCanvasGeometry() {
   const probe = document.createElement('canvas')
@@ -49,11 +50,11 @@ export function createPhoneSoftware(
     dialog.className = 'software-preview'
     dialog.innerHTML = `
       <div class="software-preview-header">
-        <p>Apps preview. To run these apps on the 3D screen, use Chrome Canary and enable <strong>chrome://flags/#canvas-draw-element</strong> and <strong>chrome://flags/#enable-experimental-web-platform-features</strong>, then relaunch. Both drawing and geometry support are required.</p>
         <button type="button">Close</button>
       </div>
       <div class="software-preview-viewport"></div>
     `
+    dialog.querySelector('.software-preview-header')!.prepend(createCanvasSupportNotice())
     dialog.querySelector('.software-preview-viewport')!.append(shell.element)
     dialog.querySelector('button')!.addEventListener('click', () => dialog.close())
     document.body.append(dialog)
@@ -65,6 +66,10 @@ export function createPhoneSoftware(
       supported,
       setWallpaper,
       openPreview() { dialog.showModal() },
+      goHome() {
+        shell.showHome()
+        if (!dialog.open) dialog.showModal()
+      },
       updateGeometry(_enabled: boolean) {},
     }
   }
@@ -101,6 +106,7 @@ export function createPhoneSoftware(
     if (!painted) { display.setAppTexture(texture); painted = true }
     repaint()
   })
+  shell.element.addEventListener('phone-request-paint', () => canvas.requestPaint())
   canvas.requestPaint()
 
   const normal = new THREE.Vector3()
@@ -137,5 +143,14 @@ export function createPhoneSoftware(
       canvas.updateElementGeometry(element, { canvasTransform: new DOMMatrix(transform.elements) })
     }
   }
-  return { supported, setWallpaper, openPreview() {}, updateGeometry }
+  return {
+    supported,
+    setWallpaper,
+    openPreview() {},
+    goHome() {
+      shell.showHome()
+      canvas.requestPaint()
+    },
+    updateGeometry,
+  }
 }

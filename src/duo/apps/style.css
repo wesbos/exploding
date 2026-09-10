@@ -1,86 +1,140 @@
 .phone-software {
-  --phone-wallpaper: var(--custom-wallpaper, radial-gradient(ellipse at 12% 100%, #c99263 0%, transparent 58%), radial-gradient(ellipse at 90% 0%, #536b76 0%, transparent 62%), linear-gradient(#243e41, #243e41));
-  position: relative; width: 1000px; height: 704px; overflow: hidden;
-  color: #f5f1e9; background: var(--phone-wallpaper); background-size: 1000px 704px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color-scheme: dark;
+  --phone-wallpaper: var(--custom-wallpaper, radial-gradient(ellipse at 10% 110%, #78e4ed 0%, #1478cc 36%, transparent 66%), radial-gradient(ellipse at 96% -10%, #c4efff 0%, #317ced 35%, transparent 70%), linear-gradient(145deg, #061949, #17349b 50%, #060d30));
+  position: relative;
+  width: 1000px;
+  height: 704px;
+  overflow: hidden;
+  color: #000;
+  background: var(--phone-wallpaper);
+  background-size: 1000px 704px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 17px;
+  line-height: 1.3;
+  letter-spacing: -.022em;
+  -webkit-font-smoothing: antialiased;
+  color-scheme: light;
 }
-.phone-software[data-app=calculator] { --phone-wallpaper: linear-gradient(#171b20, #171b20); }
-.phone-software[data-app=notes] { --phone-wallpaper: linear-gradient(#f4f1e9, #f4f1e9); color: #24221f; color-scheme: light; }
-.phone-software[data-app=notes] .phone-status { color: #5e5a52; }
-.phone-software[data-app=notes] .phone-battery { border-color: #5e5a52; background: #5e5a52; box-shadow: inset 0 0 0 2px #f4f1e9; }
-.phone-software[data-app=notes] .phone-home { color: #413d37; background: #ded9ce; }
-.phone-software[data-app=notes] .phone-home:hover { background: #d2cabd; }
-.phone-software[data-app=notes] .phone-footer { color: #8c867b; }
-.phone-software[data-app=notes] .phone-home-indicator { background: #5e5a52; }
+.phone-software *, .phone-software *::before, .phone-software *::after { box-sizing: border-box; }
 .phone-half { position: absolute; top: 0; width: 480px; height: 704px; background: var(--phone-wallpaper); background-size: 1000px 704px; }
 .phone-left { left: 10px; background-position: -10px 0; }
 .phone-right { left: 510px; background-position: -510px 0; }
-.phone-status { height: 70px; padding: 27px 28px 15px; display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: 600; letter-spacing: .02em; }
-.phone-status > span:last-child { display: flex; align-items: center; gap: 9px; }
-.phone-battery { display: inline-block; width: 25px; height: 12px; border: 2px solid #dce9df; border-radius: 4px; background: #dce9df; box-shadow: inset 0 0 0 2px #294346; }
-.phone-software button { border: 0; color: inherit; font: inherit; touch-action: manipulation; }
-.phone-software button:focus-visible { outline: 3px solid #fff; outline-offset: -5px; }
-.phone-home { position: absolute; left: 28px; top: 76px; padding: 10px 20px; border-radius: 24px; background: #ffffff18; font-size: 16px !important; }
-.phone-home:hover { background: #ffffff30; }
-.phone-welcome { padding: 39px 28px 0; }
-.phone-eyebrow { color: #cbd9d4; font-size: 11px; letter-spacing: .2em; margin: 0 0 22px; }
-.phone-welcome h2 { font-size: 53px; font-weight: 500; line-height: 1.08; letter-spacing: -.055em; margin: 0 0 23px; }
-.phone-welcome > p:not(.phone-eyebrow) { font-size: 18px; line-height: 1.6; color: #e3e5db; }
-.phone-widget { display: flex; flex-direction: column; gap: 16px; margin-top: 48px; padding: 30px; border: 1px solid #ffffff40; border-radius: 28px; background: #ffffff12; }
-.phone-widget span { font-size: 13px; letter-spacing: .025em; }
-.phone-widget span:first-child { font-size: 10px; letter-spacing: .18em; }
-.phone-widget strong { font-size: 32px; font-weight: 500; letter-spacing: -.04em; }
-.phone-footer { position: absolute; bottom: 28px; left: 28px; font-size: 10px; letter-spacing: .18em; color: #d7dad0; }
-.phone-app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; padding: 39px 28px; }
-.phone-app-icon { display: flex; flex-direction: column; align-items: center; gap: 13px; padding: 0; background: none; font-size: 15px !important; }
-.phone-icon-art { display: grid; place-items: center; width: 86px; height: 86px; border-radius: 23px; box-shadow: inset 0 1px 1px #ffffff66, 0 9px 22px #0002; font-size: 63px; font-weight: 300; color: #fff; }
-.phone-app-icon:hover .phone-icon-art { filter: brightness(1.15); }
-.phone-app-note { position: absolute; bottom: 63px; width: 100%; text-align: center; color: #d3ded9; font-size: 14px; }
-.phone-home-indicator { position: absolute; bottom: 22px; left: 150px; width: 180px; height: 5px; background: #f5f1e9; border-radius: 5px; }
-.calculator-result { padding: 100px 28px 0; }
-.calculator-result h2 { font-size: 34px; font-weight: 500; letter-spacing: -.04em; margin: 0; }
-.calculator-result .phone-eyebrow { font-size: 10px; color: #87949e; }
-.calculator-readout { margin-top: 82px; text-align: right; }
-.calculator-expression { height: 24px; margin: 0 0 18px; font-size: 19px; color: #a4aeb9; }
-.calculator-value { display: block; font-size: 74px; letter-spacing: -.065em; font-weight: 300; line-height: 1.2; font-variant-numeric: tabular-nums; }
-.calculator-value.long-result { font-size: 43px; }
-.calculator-hint { margin-top: 53px; color: #82909b; font-size: 14px; line-height: 1.8; }
-.calculator-keypad { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(5, 88px); gap: 12px; padding: 40px 28px 0; }
-.calculator-key { border-radius: 29px; background: #30363e; font-size: 33px !important; font-weight: 400 !important; }
-.calculator-key.utility { background: #58616a; font-size: 27px !important; }
-.calculator-key.operator { background: #ff9f0a; color: #171b20; font-size: 39px !important; }
-.calculator-key:hover { filter: brightness(1.22); }
+.phone-software .phone-status {
+  position: absolute; inset: 0 0 auto; height: 54px; padding: 14px 28px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  color: #000; font-size: 16px; font-weight: 600; letter-spacing: 0;
+}
+.phone-status time { min-width: 54px; text-align: center; }
+.phone-status > span { display: flex; align-items: center; gap: 5px; }
+.phone-signal { width: 19px; height: 13px; }
+.phone-wifi { width: 18px; height: 14px; }
+.phone-software .phone-status .phone-battery { display: block; width: 28px; height: 14px; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.phone-software[data-appearance=dark] .phone-status { color: #fff; }
+.phone-software button { font: inherit; cursor: pointer; touch-action: manipulation; }
+.phone-software button:focus-visible,
+.phone-software input:focus-visible,
+.phone-software textarea:focus-visible,
+.phone-software select:focus-visible { outline: 3px solid #007aff; outline-offset: 2px; }
+.phone-software [hidden] { display: none !important; }
+.phone-left-content, .phone-right-content { position: absolute; top: 54px; bottom: 28px; width: 100%; height: 622px; overflow: hidden; }
+.phone-software .phone-home {
+  position: absolute; top: auto; left: 150px; bottom: 0; width: 180px; height: 28px;
+  padding: 0; display: grid; place-items: center; border: 0; border-radius: 0; background: transparent; color: #000;
+}
+.phone-software .phone-home:hover { background: transparent; }
+.phone-software .phone-home-indicator { position: static; display: block; width: 144px; height: 5px; border-radius: 3px; background: currentColor; }
+.phone-software[data-appearance=dark] .phone-home { color: #fff; }
+.phone-software .phone-footer { display: none; }
+.phone-eyebrow { margin: 0 0 8px; color: #8e8e93; font-size: 13px; letter-spacing: 0; }
+.phone-software[data-app=launcher] { color: #fff; color-scheme: dark; }
+.phone-app-grid {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 94px;
+  align-content: start; gap: 0 14px; height: 478px; padding: 12px 27px 0; overflow: hidden;
+}
+.phone-app-icon {
+  min-width: 0; display: flex; flex-direction: column; align-items: center; align-self: start;
+  gap: 5px; padding: 0; border: 0; background: none; color: #fff;
+}
+.phone-app-icon .phone-app-label { width: 100%; overflow: hidden; text-align: center; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; line-height: 17px; font-weight: 400; letter-spacing: 0; text-shadow: 0 1px 3px #0008; }
+.phone-app-icon:active .app-icon { filter: brightness(.72); }
+.phone-search {
+  position: absolute; bottom: 107px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 4px; height: 29px; padding: 0 11px;
+  border: 0; border-radius: 18px; background: #ffffff2b; color: #fff; font-size: 12px !important; font-weight: 500 !important;
+}
+.phone-search svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; }
+.phone-dock {
+  position: absolute; bottom: 4px; left: 16px; right: 16px; height: 92px;
+  display: grid; grid-template-columns: repeat(4, 1fr); align-items: center;
+  padding: 14px 12px; border-radius: 32px; background: #c0d5f05e;
+}
+.phone-dock .phone-app-icon { align-self: center; }
+.phone-dock .phone-app-label { display: none; }
+.phone-search-panel { height: 100%; padding: 16px 20px; background: #1c254ddb; border-radius: 28px; display: flex; flex-direction: column; }
+.phone-search-bar { display: flex; gap: 12px; align-items: center; }
+.phone-search-bar label { min-width: 0; flex: 1; }
+.phone-search-bar input { width: 100%; height: 44px; border: 0; border-radius: 14px; padding: 0 14px; background: #ffffff20; color: #fff; font: inherit; }
+.phone-search-bar input::placeholder { color: #ffffffa6; }
+.phone-search-bar button { border: 0; padding: 0; background: none; color: #fff; }
+.phone-search-panel h2 { font-size: 20px; margin: 24px 0 18px; }
+.phone-search-results { min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 94px; gap: 0 12px; }
+.phone-search-empty { text-align: center; color: #ffffffa6; font-size: 22px; margin-top: 100px; }
+.phone-software[data-app=calculator] { --phone-wallpaper: linear-gradient(#000, #000); color: #fff; color-scheme: dark; }
+.calculator-result { height: 100%; padding: 16px 24px 24px; display: flex; flex-direction: column; }
+.calculator-result h2 { font-size: 34px; font-weight: 700; letter-spacing: -.03em; margin: 0; }
+.calculator-history { flex: 1; min-height: 0; overflow-y: auto; margin: 20px 0; padding: 0; list-style: none; }
+.calculator-history li { padding: 14px 0; border-bottom: .5px solid #38383a; text-align: right; }
+.calculator-history span { display: block; color: #8e8e93; font-size: 20px; }
+.calculator-history strong { display: block; font-size: 28px; font-weight: 400; margin-top: 3px; }
+.calculator-main { height: 100%; display: flex; flex-direction: column; padding: 0 22px; }
+.calculator-readout { height: 140px; text-align: right; padding: 8px 14px 12px; }
+.calculator-expression { min-height: 31px; margin: 0 0 4px; font-size: 25px; color: #8e8e93; overflow-wrap: anywhere; }
+.calculator-value { display: block; font-size: 76px; font-weight: 300; line-height: 1.1; letter-spacing: -.04em; }
+.calculator-value.long-result { font-size: 47px; }
+.calculator-keypad { display: grid; grid-template-columns: repeat(4, 88px); grid-template-rows: repeat(5, 88px); justify-content: center; gap: 10px 14px; padding: 0; }
+.calculator-key { display: grid; place-items: center; align-self: center; width: 100%; aspect-ratio: 1; border: 0; border-radius: 50%; background: #2a2a2c; color: #fff; font-size: 38px !important; font-weight: 400 !important; letter-spacing: 0; }
+.calculator-key.utility { background: #5c5c5f; font-size: 32px !important; }
+.calculator-key.operator { background: #ff9f0a; color: #fff; font-size: 44px !important; }
+.calculator-key:hover { filter: brightness(1.12); }
 .calculator-key:active { filter: brightness(1.5); }
-.calculator-key[aria-pressed=true] { background: #fff1d6; color: #bc6300; }
-.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-.notes-sidebar { padding: 100px 28px 0; }
-.notes-heading { display: flex; align-items: end; justify-content: space-between; margin-bottom: 29px; }
-.notes-heading .phone-eyebrow { margin-bottom: 9px; color: #9a7931; }
-.notes-heading h2 { margin: 0; font-size: 42px; font-weight: 600; letter-spacing: -.05em; }
-.notes-new { display: grid; place-items: center; width: 47px; height: 47px; padding: 0; border-radius: 50%; background: #e3b341; color: #34270c !important; font-size: 31px !important; font-weight: 300 !important; }
-.notes-new:hover { background: #edc35f; }
-.notes-list { display: flex; flex-direction: column; max-height: 475px; overflow: auto; border-top: 1px solid #d7d1c5; }
-.notes-list-item { display: flex; flex-direction: column; gap: 8px; width: 100%; padding: 19px 16px; border-bottom: 1px solid #d7d1c5 !important; background: transparent; color: #282621 !important; text-align: left; }
-.notes-list-item:hover { background: #ebe6dc; }
-.notes-list-item[aria-selected=true] { background: #e3b341; border-color: #e3b341 !important; border-radius: 12px; }
-.notes-list-item strong { overflow: hidden; font-size: 18px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
-.notes-list-meta { display: flex; gap: 9px; min-width: 0; color: #817b71; font-size: 13px; }
-.notes-list-item[aria-selected=true] .notes-list-meta { color: #59451d; }
-.notes-list-meta time { flex: 0 0 auto; font-weight: 600; }
+.calculator-key[aria-pressed=true] { background: #fff; color: #ff9f0a; }
+.calculator-key svg { width: 33px; height: 28px; }
+.phone-software[data-app=notes] { --phone-wallpaper: linear-gradient(#fff, #fff); color: #000; color-scheme: light; }
+.phone-software[data-app=notes] .phone-left { background: #f2f2f7; }
+.notes-sidebar { height: 100%; padding: 12px 20px 0; display: flex; flex-direction: column; background: #f2f2f7; }
+.notes-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.notes-heading h2 { margin: 0; font-size: 34px; font-weight: 700; letter-spacing: -.03em; }
+.notes-new { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: #fff; color: #1c1c1e; }
+.notes-new svg, .notes-delete svg { width: 23px; height: 23px; }
+.notes-search { display: flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; margin-bottom: 24px; border-radius: 10px; background: #e3e3e8; color: #8e8e93; }
+.notes-search svg { width: 17px; height: 17px; flex-shrink: 0; }
+.notes-search input { width: 100%; min-width: 0; border: 0; background: none; color: #000; font: inherit; padding: 7px 0; }
+.notes-search input::placeholder { color: #8e8e93; }
+.notes-section-title { margin: 0 0 10px 16px; font-size: 20px; font-weight: 700; }
+.notes-list { display: flex; flex-direction: column; min-height: 0; overflow-y: auto; border-radius: 12px; background: #fff; }
+.notes-list-item { position: relative; display: flex; flex-direction: column; gap: 5px; width: 100%; min-height: 76px; padding: 16px; border: 0; background: transparent; color: #000; text-align: left; flex-shrink: 0; }
+.notes-list-item + .notes-list-item::before { position: absolute; top: 0; left: 16px; right: 0; height: .5px; background: #c6c6c8; content: ''; }
+.notes-list-item:hover { background: #f9f9f9; }
+.notes-list-item[aria-selected=true] { background: #ffe99d; }
+.notes-list-item strong { overflow: hidden; font-size: 17px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.notes-list-meta { display: flex; gap: 9px; min-width: 0; color: #8e8e93; font-size: 15px; }
+.notes-list-item[aria-selected=true] .notes-list-meta { color: #76632e; }
+.notes-list-meta time { flex: 0 0 auto; }
 .notes-list-meta span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.notes-editor { height: 100%; padding: 23px 29px 55px; }
-.notes-editor-toolbar { display: flex; align-items: center; justify-content: space-between; min-height: 40px; margin-bottom: 18px; }
-.notes-saved { color: #918a7f; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
-.notes-delete { padding: 9px 14px; border-radius: 20px; background: #e8e2d8; color: #9d382f !important; font-size: 13px !important; }
-.notes-delete:hover { background: #dfd5c8; }
+.notes-count { margin: auto 0 0; padding: 18px 0; font-size: 13px; text-align: center; color: #8e8e93; }
+.notes-editor { height: 100%; padding: 0 20px 12px; display: flex; flex-direction: column; background: #fff; }
+.notes-editor-toolbar { display: flex; align-items: center; justify-content: space-between; min-height: 44px; margin-bottom: 12px; }
+.notes-saved { color: #8e8e93; font-size: 13px; letter-spacing: 0; }
+.notes-delete { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: #f2f2f7; color: #1c1c1e; }
 .notes-delete:disabled { visibility: hidden; }
 .notes-title-label, .notes-body-label { display: block; }
-.notes-title, .notes-body { box-sizing: border-box; width: 100%; border: 0; outline: 0; background: transparent; color: #24221f; font: inherit; }
-.notes-title { padding: 0 0 17px; border-bottom: 1px solid #d7d1c5; font-size: 31px; font-weight: 650; letter-spacing: -.035em; }
-.notes-title::placeholder, .notes-body::placeholder { color: #aaa398; }
-.notes-body { height: 431px; padding: 23px 0; resize: none; font-size: 18px; line-height: 1.65; }
-.notes-empty { margin-top: 190px; color: #999185; text-align: center; font-size: 17px; }
+.notes-body-label { flex: 1; min-height: 0; }
+.notes-title, .notes-body { box-sizing: border-box; width: 100%; border: 0; background: transparent; color: #000; font: inherit; }
+.notes-title { padding: 6px 0 12px; font-size: 28px; font-weight: 700; letter-spacing: -.025em; }
+.notes-title::placeholder, .notes-body::placeholder { color: #aeaeb2; }
+.notes-body { height: 100%; padding: 0; resize: none; font-size: 17px; line-height: 1.5; }
+.notes-empty { margin-top: 190px; color: #8e8e93; text-align: center; font-size: 17px; }
 .notes-editor.is-empty .notes-title-label, .notes-editor.is-empty .notes-body-label { display: none; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .software-preview { width: min(1040px, 96vw); padding: 16px; border: 1px solid #536358; border-radius: 12px; background: #171c1c; color: #e3e6e2; }
 .software-preview::backdrop { background: #000b; }
 .software-preview-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 14px; }

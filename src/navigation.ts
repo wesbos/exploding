@@ -70,10 +70,4 @@ export function setupNavigation(controls: OrbitControls, canvas: HTMLCanvasEleme
     }, true)
   }
 
-  return {
-    canSelect(event: PointerEvent) {
-      return event.target === canvas && event.isPrimary && event.button === 0 &&
-        !spaceHeld && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey
-    },
-  }
 }

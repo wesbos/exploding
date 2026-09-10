@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import { createDuo } from './model'
 import { createPhoneSoftware } from './software'
+import { createCanvasSupportNotice } from './canvas-support'
 import { stepPose } from './pose'
 import { createKnollingLayout } from '../knolling'
 import { setupNavigation } from '../navigation'
@@ -137,12 +138,18 @@ const appearance = setupAppearance({
   },
 })
 const useApps = document.querySelector<HTMLButtonElement>('#use-apps')!
-if (!software.supported) useApps.textContent = 'Apps preview'
+if (!software.supported) {
+  useApps.textContent = 'Apps preview'
+  const notice = createCanvasSupportNotice()
+  notice.setAttribute('role', 'alert')
+  document.querySelector('.duo-header')!.after(notice)
+  document.querySelector('.duo-app')!.classList.add('has-canvas-warning')
+}
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = !reducedMotion.matches
-const navigation = setupNavigation(controls, renderer.domElement)
+setupNavigation(controls, renderer.domElement)
 controls.minDistance = 1.0
 controls.maxDistance = 190
 controls.minPolarAngle = 0.1
@@ -371,24 +378,21 @@ document.querySelectorAll<HTMLButtonElement>('[data-finish]').forEach(button => 
   appearance.setColor(finish === 'white' ? '#e6e6e0' : '#263748')
   document.querySelectorAll<HTMLButtonElement>('[data-finish]').forEach(item => item.setAttribute('aria-pressed', String(item === button)))
 }))
-document.querySelector<HTMLButtonElement>('#screen-toggle')!.addEventListener('click', event => {
-  screens = !screens
-  model.setScreen(screens)
-  const button = event.currentTarget as HTMLButtonElement
-  button.setAttribute('aria-pressed', String(screens))
-  button.textContent = screens ? 'Displays on' : 'Displays off'
-})
+function setScreens(value: boolean) {
+  screens = value
+  model.setScreen(value)
+  const button = document.querySelector<HTMLButtonElement>('#screen-toggle')!
+  button.setAttribute('aria-pressed', String(value))
+  button.textContent = value ? 'Displays on' : 'Displays off'
+}
+document.querySelector<HTMLButtonElement>('#screen-toggle')!.addEventListener('click', () => setScreens(!screens))
 useApps.addEventListener('click', () => {
   if (!software.supported) { software.openPreview(); return }
   tent = false
   reveal = false
   revealToggle.setAttribute('aria-pressed', 'false')
   view = 'front'
-  screens = true
-  model.setScreen(true)
-  const screenToggle = document.querySelector<HTMLButtonElement>('#screen-toggle')!
-  screenToggle.setAttribute('aria-pressed', 'true')
-  screenToggle.textContent = 'Displays on'
+  setScreens(true)
   requestPose({ fold: 180, explosion: 0 })
 })
 for (const direction of ['front', 'rear', 'perspective'] as const) {
@@ -410,26 +414,61 @@ reducedMotion.addEventListener('change', () => {
   if (reducedMotion.matches) { pose = { ...target }; frameModel(false) }
 })
 
-const raycaster = new THREE.Raycaster()
-const pointer = new THREE.Vector2()
-let pointerStart: { x: number; y: number } | null = null
+const sideButtonRaycaster = new THREE.Raycaster()
+const sideButtonPointer = new THREE.Vector2()
+let sideButtonPointerId: number | null = null
+let sideButtonStart: { x: number; y: number } | null = null
+let sideButtonPress = 0
+let sideButtonPressTarget = 0
+let sideButtonReleaseDelay = 0
+
+function hitsSideButton(event: PointerEvent) {
+  if (event.target !== renderer.domElement || !event.isPrimary || event.button !== 0) return false
+  const rect = renderer.domElement.getBoundingClientRect()
+  sideButtonPointer.set(
+    (event.clientX - rect.left) / rect.width * 2 - 1,
+    -(event.clientY - rect.top) / rect.height * 2 + 1,
+  )
+  sideButtonRaycaster.setFromCamera(sideButtonPointer, camera)
+  return sideButtonRaycaster.intersectObject(model.sideButton, false).length > 0
+}
+
 renderer.domElement.addEventListener('pointerdown', event => {
-  pointerStart = null
-  if (!navigation.canSelect(event)) return
-  pointerStart = { x: event.clientX, y: event.clientY }
-})
-renderer.domElement.addEventListener('pointercancel', () => { pointerStart = null })
+  if (!hitsSideButton(event)) return
+  event.preventDefault()
+  event.stopImmediatePropagation()
+  sideButtonPointerId = event.pointerId
+  sideButtonStart = { x: event.clientX, y: event.clientY }
+  sideButtonReleaseDelay = 0
+  sideButtonPressTarget = 1
+  renderer.domElement.setPointerCapture(event.pointerId)
+}, true)
 renderer.domElement.addEventListener('pointerup', event => {
-  const start = pointerStart
-  pointerStart = null
-  if (!start || Math.hypot(event.clientX - start.x, event.clientY - start.y) > 5) return
-  const box = renderer.domElement.getBoundingClientRect()
-  pointer.set((event.clientX - box.left) / box.width * 2 - 1, -(event.clientY - box.top) / box.height * 2 + 1)
-  raycaster.setFromCamera(pointer, camera)
-  const hit = raycaster.intersectObjects(model.parts.filter(part => part.group.visible).map(part => part.group), true)[0]
-  if (software.supported && screens && pose.explosion === 0 && hit?.object === model.display.surface) return
-  if (hit && typeof hit.object.userData.partId === 'string') selectPart(hit.object.userData.partId)
+  if (event.pointerId !== sideButtonPointerId) return
+  event.preventDefault()
+  event.stopImmediatePropagation()
+  const start = sideButtonStart
+  sideButtonPointerId = null
+  sideButtonStart = null
+  sideButtonReleaseDelay = 0.1
+  if (renderer.domElement.hasPointerCapture(event.pointerId)) renderer.domElement.releasePointerCapture(event.pointerId)
+  if (start && Math.hypot(event.clientX - start.x, event.clientY - start.y) <= 8) {
+    setScreens(true)
+    software.goHome()
+  }
+}, true)
+renderer.domElement.addEventListener('pointercancel', event => {
+  if (event.pointerId !== sideButtonPointerId) return
+  sideButtonPointerId = null
+  sideButtonStart = null
+  sideButtonReleaseDelay = 0
+  sideButtonPressTarget = 0
+}, true)
+renderer.domElement.addEventListener('pointermove', event => {
+  if (sideButtonPointerId !== null || event.pointerType === 'touch') return
+  renderer.domElement.style.cursor = hitsSideButton(event) ? 'pointer' : ''
 })
+
 renderer.domElement.addEventListener('keydown', event => {
   if (event.key.toLowerCase() === 'r') { event.preventDefault(); resetCamera(); return }
   const directions: Record<string, [number, number]> = { ArrowLeft: [-0.13, 0], ArrowRight: [0.13, 0], ArrowUp: [0, -0.12], ArrowDown: [0, 0.12] }
@@ -479,6 +518,14 @@ function renderFrame(delta: number) {
   knollAmount = reducedMotion.matches ? knollTarget : THREE.MathUtils.damp(knollAmount, knollTarget, 9, delta)
   if (Math.abs(knollAmount - knollTarget) < 0.0005) knollAmount = knollTarget
   applyPose(pose, knollAmount)
+  if (sideButtonReleaseDelay > 0) {
+    sideButtonReleaseDelay -= delta
+    if (sideButtonReleaseDelay <= 0) sideButtonPressTarget = 0
+  }
+  sideButtonPress = reducedMotion.matches
+    ? sideButtonPressTarget
+    : THREE.MathUtils.damp(sideButtonPress, sideButtonPressTarget, 30, delta)
+  model.setSideButtonPress(sideButtonPress)
   targetRotation.copy(orientation(pose.fold, pose.explosion))
   if (reducedMotion.matches) model.phone.quaternion.copy(targetRotation)
   else model.phone.quaternion.slerp(targetRotation, 1 - Math.exp(-10 * delta))

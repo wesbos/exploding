@@ -1,0 +1,248 @@
+.phone-software:is([data-app=mail], [data-app=safari]) { --phone-wallpaper: #fff; color-scheme: light; }
+.phone-software[data-app=maps] { --phone-wallpaper: #f2f2f7; color-scheme: light; }
+.phone-software[data-app=weather] { --phone-wallpaper: #2865a0; color-scheme: dark; }
+
+.internet-app {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  padding: 8px 20px 16px;
+  overflow: auto;
+  background: #fff;
+  color: #000;
+  color-scheme: light;
+  font: 17px/1.3 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  scrollbar-width: thin;
+}
+.internet-app *, .internet-app *::before, .internet-app *::after { box-sizing: border-box; }
+.internet-app :is(button, input, select, textarea) { font: inherit; }
+.internet-app :is(h2, h3, h4, h5, p) { margin: 0; }
+.internet-app :is(button, input, select, textarea):focus-visible { outline: 2px solid #007aff; outline-offset: 2px; }
+.internet-app button { cursor: pointer; }
+.internet-app button:disabled { opacity: .35; cursor: default; }
+.internet-app [hidden] { display: none !important; }
+.internet-hero { flex-shrink: 0; }
+.internet-hero h2 { font-size: 34px; font-weight: 700; line-height: 1.15; letter-spacing: -.7px; }
+.internet-hero:has(.internet-demo-label) { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; }
+.internet-demo-label, .internet-kicker, .internet-summary-row, .internet-compose-status, .internet-page-url { font-size: 13px; font-weight: 400; color: #6c6c70; }
+.internet-nav-label { display: block; color: #007aff; font-size: 17px; margin-bottom: 12px; }
+.internet-section-label { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; margin-bottom: 10px !important; }
+.internet-symbol { width: 24px; height: 24px; flex-shrink: 0; vertical-align: middle; }
+.internet-field { display: grid; gap: 6px; font-size: 15px; min-width: 0; }
+.internet-input, .internet-select, .internet-textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: #efeff0;
+  color: inherit;
+}
+.internet-input::placeholder, .internet-textarea::placeholder { color: #8e8e93; }
+.internet-search-field .internet-input { padding-left: 34px; background: #efeff0 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2.3'%3E%3Ccircle cx='10' cy='10' r='6.5'/%3E%3Cpath d='m15 15 6 6'/%3E%3C/svg%3E") no-repeat 10px center; }
+.internet-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 10px;
+  color: #007aff;
+  background: transparent;
+}
+.internet-button.primary { color: #fff; background: #007aff; font-weight: 600; }
+.internet-button:not(:disabled):active, .internet-list-item:active, .internet-mini-row:active { opacity: .65; }
+.internet-pill-row, .internet-mode-row { display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: 10px; background: #efeff0; flex-shrink: 0; }
+.internet-pill { display: inline-flex; justify-content: center; align-items: center; gap: 5px; flex: 1; min-height: 44px; padding: 8px; border: 0; border-radius: 8px; background: transparent; color: #6c6c70; font-size: 15px !important; }
+.internet-pill.is-active { color: #000; background: #fff; box-shadow: 0 1px 4px #0002; font-weight: 600; }
+.internet-pill > span { font-size: 13px; color: #8e8e93; }
+.internet-summary-row { display: flex; justify-content: space-between; gap: 10px; }
+.internet-list, .internet-mini-list, .internet-conversation, .internet-browser-sidebar { min-height: 0; display: flex; flex-direction: column; }
+.internet-list { overflow: auto; flex: 1; }
+.internet-list-item {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  flex-shrink: 0;
+  width: 100%;
+  min-height: 64px;
+  padding: 14px 0;
+  border: 0;
+  border-bottom: .5px solid #c6c6c8;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+.internet-list-item.is-selected { background: #f2f2f7; }
+.internet-list-item strong { font-size: 17px; font-weight: 600; }
+.internet-list-item-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.internet-list-item-top time { font-size: 13px; color: #8e8e93; flex-shrink: 0; }
+.internet-list-item :is(small, .internet-category), .internet-mini-row small { font-size: 15px; line-height: 1.3; color: #6c6c70; }
+.internet-list-meta { font-size: 15px; }
+.internet-badge-row, .internet-tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.internet-badge, .internet-tag { color: #6c6c70; font-size: 13px; }
+.internet-empty { padding: 28px 12px; color: #6c6c70; text-align: center; line-height: 1.5; }
+.internet-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-shrink: 0; min-height: 44px; }
+.internet-toolbar h3 { font-size: 22px; line-height: 1.2; font-weight: 700; overflow-wrap: anywhere; }
+.internet-toolbar-actions { display: flex; gap: 4px; align-items: center; }
+.internet-stack { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+.internet-page-card { display: flex; flex-direction: column; gap: 12px; min-height: 0; padding: 20px 0; overflow: auto; }
+.internet-page-card h4 { font-size: 28px; line-height: 1.2; font-weight: 700; }
+.internet-page-summary { color: #6c6c70; font-size: 15px; line-height: 1.4; }
+.internet-page-body { display: grid; gap: 20px; }
+.internet-page-body section { display: grid; gap: 8px; }
+.internet-page-body h5 { font-size: 20px; font-weight: 600; }
+.internet-page-body :is(p, li) { font-size: 17px; line-height: 1.5; }
+.internet-page-body ul { margin: 0; padding-left: 22px; }
+.internet-link-grid { display: grid; gap: 0; }
+.internet-link-card, .internet-result-card, .internet-mini-row {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 0;
+  border: 0;
+  border-bottom: .5px solid #c6c6c8;
+  background: transparent;
+  color: #007aff;
+  text-align: left;
+}
+.internet-result-card { gap: 8px; padding: 18px 0; }
+.internet-result-card strong { font-size: 20px; font-weight: 500; }
+.internet-result-card p { color: #3a3a3c; font-size: 15px; }
+.internet-result-url { font-size: 13px; color: #6c6c70; }
+.internet-mail-left { gap: 12px; }
+.internet-mail-left .internet-summary-row { order: 5; margin-top: auto; padding-top: 10px; border-top: .5px solid #c6c6c8; }
+.internet-mail-list .internet-list-item { padding: 13px 10px 13px 18px; min-height: 100px; }
+.internet-mail-list .internet-list-item.is-unread::before { content: ''; position: absolute; top: 20px; left: 2px; width: 8px; height: 8px; border-radius: 50%; background: #007aff; }
+.internet-mail-list .internet-list-meta { color: #000; font-size: 15px; }
+.internet-mail-list .internet-list-item small { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: #8e8e93; }
+.internet-mail-right .internet-toolbar { align-items: start; flex-wrap: wrap; border-bottom: .5px solid #c6c6c8; padding-bottom: 12px; }
+.internet-mail-right .internet-toolbar h3 { font-size: 28px; }
+.internet-mail-right .internet-toolbar-actions { margin-left: auto; }
+.internet-message-shell { display: flex; flex-direction: column; gap: 20px; min-height: 0; flex: 1; overflow: auto; }
+.internet-conversation { flex-shrink: 0; }
+.internet-bubble { width: 100%; padding: 16px 0 24px; border-bottom: .5px solid #c6c6c8; background: #fff; }
+.internet-bubble-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+.internet-bubble-meta strong { font-size: 17px; font-weight: 600; }
+.internet-bubble-meta span { display: block; color: #6c6c70; font-size: 13px; margin-top: 4px; overflow-wrap: anywhere; }
+.internet-bubble-meta time { font-size: 13px; color: #8e8e93; flex-shrink: 0; }
+.internet-bubble p { font-size: 17px; line-height: 1.5; overflow-wrap: anywhere; }
+.internet-compose { display: grid; gap: 0; background: #fff; }
+.internet-compose-grid { display: grid; gap: 0; }
+.internet-compose-grid label { display: flex; align-items: center; gap: 8px; min-height: 52px; border-bottom: .5px solid #c6c6c8; color: #6c6c70; }
+.internet-compose-grid label > span { width: 64px; flex-shrink: 0; }
+.internet-compose .internet-input { background: transparent; border-radius: 0; padding-inline: 0; color: #000; }
+.internet-compose-body { display: block; }
+.internet-compose .internet-textarea { background: transparent; min-height: 180px; padding: 16px 0; resize: vertical; line-height: 1.5; }
+.internet-compose-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: .5px solid #c6c6c8; padding-top: 8px; }
+.internet-safari-left { background: #f2f2f7; }
+.internet-safari-left .internet-browser-sidebar { flex: 1; overflow: auto; gap: 20px; }
+.internet-safari-left .internet-summary-row { font-size: 13px; }
+.internet-search-results { max-height: 150px; overflow: auto; }
+.internet-safari-left .internet-list-item { min-height: 56px; padding: 10px 12px; background: #fff; }
+.internet-safari-left .internet-list-item small { display: none; }
+.internet-safari-left .internet-mini-list { background: #fff; border-radius: 10px; padding: 0 12px; }
+.internet-safari-left .internet-mini-row { color: #000; }
+.internet-safari-left .internet-mini-row small { font-size: 13px; }
+.internet-browser-bar { order: 6; display: grid; grid-template-columns: 1fr auto; gap: 4px; flex-shrink: 0; padding: 8px; margin: 0 -8px; background: #e3e3e9; border-radius: 20px; box-shadow: 0 2px 10px #00000012; }
+.internet-browser-bar .internet-field { grid-column: 1; grid-row: 1; }
+.internet-browser-bar .internet-input { text-align: center; background: #fff; border-radius: 14px; font-size: 15px; }
+.internet-browser-bar > .internet-button { grid-column: 2; grid-row: 1; border-radius: 14px; }
+.internet-browser-controls { grid-column: 1 / -1; grid-row: 2; display: flex; justify-content: space-between; }
+.internet-safari-right { gap: 0; }
+.internet-safari-right .internet-toolbar { min-height: 52px; border-bottom: .5px solid #c6c6c8; }
+.internet-safari-right .internet-toolbar h3 { font-size: 17px; font-weight: 600; }
+.internet-safari-right .internet-page-card { flex: 1; }
+.internet-safari-right .internet-page-body { margin: 12px 0; }
+.internet-safari-right .internet-page-body :is(p, li) { font-family: Georgia, "Times New Roman", serif; font-size: 18px; line-height: 1.55; }
+.internet-safari-right [aria-pressed=true] { background: #e8f2ff; }
+.internet-maps-left { background: #f2f2f7; gap: 12px; }
+.internet-maps-left .internet-hero { padding-top: 4px; }
+.internet-maps-left .internet-search-field .internet-input, .internet-maps-left .internet-select { background-color: #fff; }
+.internet-maps-left .internet-stack { gap: 10px; }
+.internet-maps-left .internet-stack > .internet-field { grid-template-columns: 90px 1fr; align-items: center; }
+.internet-place-list { padding: 0 16px; border-radius: 12px; background: #fff; }
+.internet-place-list .internet-list-item { min-height: 104px; }
+.internet-place-list .internet-list-item small { display: none; }
+.internet-place-list .internet-list-item-top { align-items: start; }
+.internet-place-list .internet-category { font-size: 13px; }
+.internet-place-list .internet-list-item.is-selected { background: #f0f6ff; }
+.internet-maps-right { position: relative; padding: 0; gap: 0; background: #f2f2f7; }
+.internet-maps-right > .internet-toolbar { order: 2; padding: 20px 20px 8px; background: #fff; border-radius: 20px 20px 0 0; margin-top: -12px; z-index: 1; }
+.internet-maps-right > .internet-toolbar h3 { font-size: 24px; }
+.internet-maps-right > .internet-toolbar .internet-button { color: #007aff; background: #f2f2f7; border-radius: 50%; }
+.internet-map-card { display: contents; }
+.internet-map-canvas { position: relative; order: 1; flex-shrink: 0; height: 300px; width: 100%; overflow: hidden; background: #efede6; }
+.internet-map-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.internet-map-label { position: absolute; font-size: 13px; color: #737d79; text-shadow: 0 1px #fff; pointer-events: none; }
+.internet-map-label--north { top: 12%; left: 40%; }
+.internet-map-label--center { top: 43%; left: 27%; }
+.internet-map-label--water { top: 65%; left: 85%; color: #5d97b0; transform: rotate(66deg); }
+.internet-map-marker { position: absolute; display: flex; justify-content: center; transform: translate(-50%, -50%); width: 18px; height: 18px; border: 3px solid #fff; border-radius: 50%; background: #007aff; box-shadow: 0 1px 4px #0003; }
+.internet-map-marker > span { position: absolute; top: 22px; padding: 3px 7px; border-radius: 5px; background: #fffffff2; color: #333; white-space: nowrap; font-size: 12px; font-weight: 500; }
+.internet-map-marker.destination { background: #34a853; width: 26px; height: 26px; }
+.internet-map-demo { position: absolute; left: 10px; bottom: 18px; padding: 3px 5px; border-radius: 4px; background: #ffffffb3; color: #59605e; font-size: 11px; }
+.internet-route-summary { order: 3; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 12px 20px; background: #fff; }
+.internet-route-summary strong { display: block; font-size: 28px; font-weight: 700; color: #007aff; white-space: nowrap; }
+.internet-route-summary span { font-size: 15px; color: #6c6c70; white-space: nowrap; }
+.internet-route-summary p { font-size: 13px; color: #6c6c70; text-align: right; line-height: 1.5; }
+.internet-map-details { order: 4; padding: 16px 20px 24px; flex-shrink: 0; background: #fff; border-top: .5px solid #d1d1d6; }
+.internet-step-list { padding-left: 24px; margin: 0; }
+.internet-step-list li { padding: 12px 0; border-bottom: .5px solid #c6c6c8; font-size: 17px; }
+.internet-weather-left, .internet-weather-right { background: linear-gradient(#2865a0, #418fc2); color: #fff; color-scheme: dark; }
+.internet-weather-left .internet-demo-label, .internet-weather-left .internet-summary-row { color: #d6e6f5; }
+.internet-weather-left .internet-input { background-color: #ffffff24; color: #fff; }
+.internet-weather-left .internet-input::placeholder { color: #d6e6f5; }
+.internet-city-list { gap: 12px; }
+.internet-city-list .internet-list-item { position: relative; padding: 16px; min-height: 130px; background: #225c94; border: 0; border-radius: 16px; }
+.internet-city-list .internet-list-item.is-selected { background: #347eb7; }
+.internet-city-list .internet-list-item strong { font-size: 26px; font-weight: 600; }
+.internet-city-temp { position: absolute; top: 8px; right: 16px; font-size: 54px; line-height: 1.2; font-weight: 300; }
+.internet-city-list .internet-list-item-top { padding-right: 90px; }
+.internet-city-region { color: #e3edf7; font-size: 13px; }
+.internet-city-list .internet-list-meta { margin-top: 20px; font-size: 15px; }
+.internet-city-range { position: absolute; bottom: 16px; right: 16px; font-size: 13px; }
+.internet-weather-right { padding-top: 8px; gap: 14px; }
+.internet-weather-right .internet-toolbar { position: relative; justify-content: center; min-height: 44px; }
+.internet-weather-right .internet-toolbar h3 { font-size: 30px; font-weight: 400; }
+.internet-weather-right .internet-toolbar .internet-button { position: absolute; right: 0; top: 0; color: #fff; }
+.internet-weather-hero { text-align: center; flex-shrink: 0; }
+.internet-weather-hero .internet-page-url { color: #dce9f6; }
+.internet-weather-temp-row { display: flex; justify-content: center; }
+.internet-weather-temp-row strong { font-size: 90px; line-height: 1.05; font-weight: 200; letter-spacing: -3px; }
+.internet-weather-condition { font-size: 20px; color: #e4effa; }
+.internet-weather-hero p:last-child { font-size: 17px; margin-top: 3px; }
+.internet-weather-strip { padding: 12px 16px; border-radius: 16px; background: #17538680; flex-shrink: 0; }
+.internet-weather-summary { padding-bottom: 12px; border-bottom: .5px solid #ffffff40; font-size: 15px; line-height: 1.4; margin-bottom: 12px !important; }
+.internet-weather-strip .internet-section-label { color: #d1e4f5; font-size: 13px; font-weight: 500; border-bottom: .5px solid #ffffff40; padding-bottom: 10px; }
+.internet-hourly-list { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.internet-hour-card { display: grid; justify-items: center; gap: 8px; min-width: 0; }
+.internet-hour-card > span { font-size: 15px; white-space: nowrap; }
+.internet-hour-card > span:last-child { font-size: 20px; }
+.internet-weather-symbol { width: 30px; height: 30px; overflow: visible; }
+.internet-forecast-list { display: grid; }
+.internet-forecast-card { display: grid; grid-template-columns: 48px 48px minmax(0, 1fr); align-items: center; gap: 10px; min-height: 54px; border-bottom: .5px solid #ffffff30; }
+.internet-forecast-card:last-child { border: 0; }
+.internet-forecast-card strong { font-size: 17px; font-weight: 500; }
+.internet-forecast-icon { display: grid; justify-items: center; }
+.internet-forecast-icon small { color: #90d6ff; font-size: 11px; }
+.internet-forecast-range { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 500; }
+.internet-forecast-range > span:first-child { color: #c0d7e9; }
+.internet-temperature-track { position: relative; height: 5px; flex: 1; min-width: 20px; border-radius: 4px; background: #164e79; }
+.internet-temperature-track i { position: absolute; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #72d3df, #b7df91, #ffd15b); }
+.internet-weather-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex-shrink: 0; }
+.internet-weather-metrics > div { min-height: 110px; padding: 16px; border-radius: 16px; background: #17538680; }
+.internet-weather-metrics span { display: block; color: #d1e4f5; font-size: 13px; }
+.internet-weather-metrics strong { display: block; font-size: 30px; font-weight: 400; margin-top: 10px; }
+.internet-weather-left .internet-empty { color: #dce9f6; }

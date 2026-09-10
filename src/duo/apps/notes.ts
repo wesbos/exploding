@@ -64,20 +64,20 @@ export const notesApp: PhoneApp = {
     left.className = 'notes-sidebar'
     left.innerHTML = `
       <div class="notes-heading">
-        <div>
-          <p class="phone-eyebrow">YOUR THOUGHTS, UNFOLDED</p>
-          <h2>Notes</h2>
-        </div>
-        <button class="notes-new" type="button" aria-label="Create a new note">+</button>
+        <h2>Notes</h2>
+        <button class="notes-new" type="button" aria-label="Create a new note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M10 14l1-4L20 1l3 3-9 9z"/></svg></button>
       </div>
+      <label class="notes-search"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="m12 12 5 5"/></svg><span class="visually-hidden">Search notes</span><input type="search" placeholder="Search" autocomplete="off"></label>
+      <h3 class="notes-section-title">All Notes</h3>
       <div class="notes-list" role="listbox" aria-label="Notes"></div>
+      <p class="notes-count"></p>
     `
     const right = document.createElement('section')
     right.className = 'notes-editor'
     right.innerHTML = `
       <div class="notes-editor-toolbar">
         <span class="notes-saved" role="status">Saved</span>
-        <button class="notes-delete" type="button">Delete</button>
+        <button class="notes-delete" type="button" aria-label="Delete note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M9 6V3h6v3M6 6l1 15h10l1-15M10 10v7m4-7v7"/></svg></button>
       </div>
       <label class="notes-title-label">
         <span class="visually-hidden">Note title</span>
@@ -97,6 +97,7 @@ export const notesApp: PhoneApp = {
     const empty = right.querySelector<HTMLElement>('.notes-empty')!
     const deleteButton = right.querySelector<HTMLButtonElement>('.notes-delete')!
     const saved = right.querySelector<HTMLElement>('.notes-saved')!
+    const search = left.querySelector<HTMLInputElement>('.notes-search input')!
     let notes = readNotes()
     let selectedId = notes[0]?.id ?? null
 
@@ -111,7 +112,9 @@ export const notesApp: PhoneApp = {
 
     function renderList() {
       list.replaceChildren()
-      const sorted = [...notes].sort((a, b) => b.updatedAt - a.updatedAt)
+      const query = search.value.trim().toLowerCase()
+      const sorted = notes.filter(note => `${note.title}\n${note.body}`.toLowerCase().includes(query)).sort((a, b) => b.updatedAt - a.updatedAt)
+      left.querySelector('.notes-count')!.textContent = `${sorted.length} ${sorted.length === 1 ? 'Note' : 'Notes'}`
       for (const note of sorted) {
         const button = document.createElement('button')
         button.type = 'button'
@@ -170,12 +173,14 @@ export const notesApp: PhoneApp = {
         updatedAt: Date.now(),
       }
       notes.push(note)
+      search.value = ''
       selectedId = note.id
       persist()
       render()
       title.focus()
     })
     title.addEventListener('input', updateNote)
+    search.addEventListener('input', renderList)
     body.addEventListener('input', updateNote)
     deleteButton.addEventListener('click', () => {
       const index = notes.findIndex(note => note.id === selectedId)

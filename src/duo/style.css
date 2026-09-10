@@ -11,6 +11,7 @@ canvas:focus-visible { outline-offset: -6px; }
 button[hidden], [hidden] { display: none !important; }
 a { color: inherit; }
 .duo-app { min-height: 100svh; display: grid; grid-template-rows: 72px 1fr 72px; padding: 0 28px; }
+.duo-app.has-canvas-warning { grid-template-rows: 72px auto 1fr 72px; }
 .duo-header { position: relative; z-index: 5; display: flex; align-items: center; gap: 20px; justify-content: space-between; border-bottom: 1px solid var(--duo-line); }
 .duo-brand { text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 600; letter-spacing: .18em; }
 .duo-brand > span { width: 12px; height: 14px; border: 1px solid #cad6bc; border-radius: 2px; transform: skewY(-14deg); box-shadow: 4px 2px 0 -1px #171c1c, 4px 2px 0 0 #cad6bc; margin-right: 7px; }
@@ -93,6 +94,7 @@ button:disabled { cursor: default; opacity: .4; }
 @media (max-width: 1000px) { .duo-app { padding-inline: 20px; } .duo-workspace { grid-template-columns: 226px minmax(0, 1fr); } .duo-inspector { padding-right: 18px; } .duo-caption { flex-direction: column; gap: 10px; padding-inline: 22px; } .duo-dimensions { padding-inline: 22px; font-size: 7px; } .duo-stage-controls { gap: 8px; } }
 @media (max-width: 800px) {
   .duo-app { grid-template-rows: 66px 1fr auto; }
+  .duo-app.has-canvas-warning { grid-template-rows: 66px auto 1fr auto; }
   .duo-workspace { grid-template-columns: minmax(0, 1fr); }
   .duo-stage { grid-row: 1; grid-template-rows: 42px 490px 42px auto 44px; margin-inline: -20px; }
   .duo-inspector { padding: 25px 0; border: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; align-content: start; align-items: start; }

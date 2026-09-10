@@ -90,7 +90,7 @@ pmrem.dispose()
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = !reducedMotion.matches
-const navigation = setupNavigation(controls, renderer.domElement)
+setupNavigation(controls, renderer.domElement)
 controls.minDistance = 0.8
 controls.maxDistance = 55
 controls.minPolarAngle = 0.12
@@ -313,26 +313,6 @@ renderer.domElement.addEventListener('keydown', event => {
     camera.position.copy(controls.target).add(new THREE.Vector3().setFromSpherical(orbit))
     controls.update()
   }
-})
-
-const raycaster = new THREE.Raycaster()
-const pointer = new THREE.Vector2()
-let pointerStart: { x: number; y: number } | null = null
-renderer.domElement.addEventListener('pointerdown', event => {
-  pointerStart = navigation.canSelect(event) ? { x: event.clientX, y: event.clientY } : null
-})
-renderer.domElement.addEventListener('pointercancel', () => { pointerStart = null })
-renderer.domElement.addEventListener('pointerup', event => {
-  if (!pointerStart || Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 5) {
-    pointerStart = null
-    return
-  }
-  pointerStart = null
-  const rect = renderer.domElement.getBoundingClientRect()
-  pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1)
-  raycaster.setFromCamera(pointer, camera)
-  const hit = raycaster.intersectObjects(parts.filter(part => part.group.visible).map(part => part.group), true)[0]
-  if (hit && typeof hit.object.userData.partId === 'string') selectPart(hit.object.userData.partId)
 })
 
 document.querySelectorAll<HTMLButtonElement>('.swatch').forEach(button => {

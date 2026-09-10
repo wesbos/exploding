@@ -37,6 +37,8 @@ function appleMark() {
 export function createDuo() {
   const phone = new THREE.Group()
   phone.name = 'iPhone Duo'
+  let sideButton: THREE.Mesh | null = null
+  const sideButtonRestX = 8.252
   const m = makeMaterials()
   const backMaterial = new THREE.MeshPhysicalMaterial({
     color: 0xe6e6e0, roughness: 0.37, metalness: 0.15, clearcoat: 0.44, clearcoatRoughness: 0.29,
@@ -124,8 +126,10 @@ export function createDuo() {
       for (const [y, length] of [[1.5, 1.48], [-2.42, 1.12]]) {
         const socket = panel(chassis, 0.19, length + 0.05, 0.015, m.black, 8.241, y, 0.005, 0.07)
         socket.rotation.y = Math.PI / 2
-        const button = panel(chassis, 0.15, length, 0.021, m.titanium, 8.252, y, 0.005, 0.065)
-        button.rotation.y = Math.PI / 2
+        if (y !== 1.5) {
+          const button = panel(chassis, 0.15, length, 0.021, m.titanium, 8.252, y, 0.005, 0.065)
+          button.rotation.y = Math.PI / 2
+        }
       }
       for (const x of [4.64, 5.82]) {
         const button = panel(chassis, 0.86, 0.15, 0.025, m.titanium, x, 5.902, 0, 0.06)
@@ -150,10 +154,17 @@ export function createDuo() {
     }
     microLabel(chassis, ['DUO / TITANIUM SUBSTRUCTURE', '5.2 MM  |  eSIM ONLY'], center, -4.87, -0.176, 1.8)
     batchGroup(chassis)
+    if (side === 'right') {
+      sideButton = panel(chassis, 0.15, 1.48, 0.021, m.titanium, sideButtonRestX, 1.5, 0.005, 0.065)
+      sideButton.rotation.y = Math.PI / 2
+      sideButton.name = 'Side button'
+      sideButton.userData.control = 'home'
+    }
     addPart(`frame-${side}`, `${side === 'left' ? 'Cover-side' : 'Camera-side'} chassis`, side, chassis,
       '5.2 mm half-body with mirror-finished Grade 5 titanium perimeter, structural ribs, ceramic-fiber antenna splits and miniature mounting features. Small internal mounting locations are inferred.',
       chassisOffset(side))
   }
+  if (!sideButton) throw new Error('Side button was not created')
 
   const cover = new THREE.Group()
   const coverBase = slab(halfShape('left', 0.067), 0.014, m.black, 0.004)
@@ -275,7 +286,11 @@ export function createDuo() {
     phone,
     parts,
     display,
+    sideButton,
     setPose,
+    setSideButtonPress(amount: number) {
+      sideButton.position.x = sideButtonRestX - THREE.MathUtils.clamp(amount, 0, 1) * 0.045
+    },
     setColor(value: string) {
       m.titanium.color.set(value)
       backMaterial.color.set(value)

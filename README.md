@@ -22,9 +22,15 @@ The interactive app display uses experimental HTML-in-Canvas APIs. Use an up-to-
 
 **Relaunch Canary after changing the flags**, then reload http://localhost:6967/. Drawing support alone is not enough: the app also requires geometry synchronization so buttons follow the folded display.
 
-Click **Use apps** in the toolbar directly below the 3D phone (scroll down if necessary). This opens the phone flat and turns its displays on. Click the **Calculator** icon on the phone to launch it, and **Home** to return to the launcher.
+Click **Use apps** in the toolbar directly below the 3D phone (scroll down if necessary). This opens the phone flat and turns its displays on. Click an app icon on the phone to launch it, and the bottom home indicator to return to the launcher.
 
-If the toolbar says **Apps preview** instead, the browser does not expose all the required APIs. That button opens a regular HTML preview rather than rendering apps on the 3D screen. Confirm that you are using Canary, both flags are enabled, and the browser has been relaunched. These APIs are experimental and may change between browser versions.
+### App interface
+
+The Home Screen includes all 42 apps, an eight-app dock, and working app search. Click either bottom home indicator or press **Escape** to return from an app. App instances remain mounted in memory when switching, preserving their current state.
+
+The interface targets iOS 26's app-specific typography, colors, iconography, lists, and controls without reproducing the Liquid Glass rendering effect. These are interactive HTML recreations, not iOS running in a simulator. The two-pane folding display is an adaptation rather than a pixel-identical layout from a shipping Apple device. Visual references include the [iPhone User Guide](https://support.apple.com/guide/iphone/welcome/ios), [Calculator](https://support.apple.com/guide/iphone/use-the-basic-calculator-iph1ac0b5cc/ios), and [Notes](https://support.apple.com/guide/iphone/get-started-with-notes-iph9e04f3be2/ios).
+
+If the browser does not expose all the required APIs, an alert above the viewer explains which Canary flags to enable and how to relaunch. The toolbar also says **Apps preview** instead. That button opens a regular HTML preview rather than rendering apps on the 3D screen. Confirm that you are using Canary, both flags are enabled, and the browser has been relaunched. These APIs are experimental and may change between browser versions.
 
 ### Headed agent-browser preview
 
