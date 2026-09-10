@@ -3,6 +3,7 @@ import { createAppShell, SCREEN_HEIGHT, SCREEN_WIDTH } from './apps/shell'
 import type { createFoldingDisplay } from './display'
 import { wallpaperImage, type WallpaperId } from '../wallpapers'
 import { createCanvasSupportNotice } from './canvas-support'
+import { createAppsPreview } from './apps/preview'
 
 function supportsCanvasGeometry() {
   const probe = document.createElement('canvas')
@@ -46,30 +47,12 @@ export function createPhoneSoftware(
   }
 
   if (!supported) {
-    const dialog = document.createElement('dialog')
-    dialog.className = 'software-preview'
-    dialog.innerHTML = `
-      <div class="software-preview-header">
-        <button type="button">Close</button>
-      </div>
-      <div class="software-preview-viewport"></div>
-    `
-    dialog.querySelector('.software-preview-header')!.prepend(createCanvasSupportNotice())
-    dialog.querySelector('.software-preview-viewport')!.append(shell.element)
-    dialog.querySelector('button')!.addEventListener('click', () => dialog.close())
-    document.body.append(dialog)
-    const observer = new ResizeObserver(() => {
-      shell.element.style.setProperty('--preview-scale', String(Math.min(1, (dialog.clientWidth - 32) / SCREEN_WIDTH)))
-    })
-    observer.observe(dialog)
+    const preview = createAppsPreview(shell, createCanvasSupportNotice())
     return {
       supported,
       setWallpaper,
-      openPreview() { dialog.showModal() },
-      goHome() {
-        shell.showHome()
-        if (!dialog.open) dialog.showModal()
-      },
+      openPreview: preview.open,
+      goHome: preview.goHome,
       updateGeometry(_enabled: boolean) {},
     }
   }
@@ -131,6 +114,7 @@ export function createPhoneSoftware(
       const visible = enabled && painted && normal.dot(toCamera) > 0
       return { element, world, visible, distance: toCamera.lengthSq() }
     })
+    shell.setVisible(halves.some(half => half.visible))
     // Nearer halves take precedence when they overlap in a folded view.
     halves.sort((a, b) => b.distance - a.distance)
     for (const { element, world, visible } of halves) {

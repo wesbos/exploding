@@ -14,7 +14,7 @@ import type { AppInstance, PhoneApp } from './types'
 import { wellnessApps } from './wellness'
 import './style.css'
 
-// App instances stay mounted in memory when returning home.
+// Keep app state in memory, but deactivate resources when its screen is hidden.
 const apps: PhoneApp[] = [
   ...communicationApps,
   ...internetApps,
@@ -46,12 +46,12 @@ export function createAppShell() {
   element.setAttribute('aria-label', 'Phone apps')
   element.innerHTML = `
     <div class="phone-half phone-left">
-      <header class="phone-status"><time>9:41</time><span aria-label="Full cellular signal, Wi-Fi, battery full">${statusSymbols}</span></header>
+      <header class="phone-status"><time></time><span class="phone-connection">${statusSymbols}</span></header>
       <div class="phone-left-content"></div>
       <button class="phone-home" type="button" aria-label="Home"><span class="phone-home-indicator"></span></button>
     </div>
     <div class="phone-half phone-right">
-      <header class="phone-status"><time>9:41</time><span aria-label="Full cellular signal, Wi-Fi, battery full">${statusSymbols}</span></header>
+      <header class="phone-status"><time></time><span class="phone-connection">${statusSymbols}</span></header>
       <div class="phone-right-content"></div>
       <button class="phone-home" type="button" aria-label="Home"><span class="phone-home-indicator"></span></button>
     </div>
@@ -63,8 +63,75 @@ export function createAppShell() {
   const instances = new Map<string, AppInstance>()
   let active: AppInstance | null = null
   let lastAppId: string | null = null
+  let surfaceVisible = true
+  let activeRunning = false
+
+  function deactivate() {
+    if (!activeRunning) return
+    activeRunning = false
+    active?.onDeactivate?.()
+  }
+  function syncActivation() {
+    if (!surfaceVisible || document.hidden) { deactivate(); return }
+    if (active && !activeRunning) {
+      activeRunning = true
+      active.onActivate?.()
+    }
+  }
+  function setVisible(visible: boolean) {
+    surfaceVisible = visible
+    syncActivation()
+  }
+  function updateStatus() {
+    const now = new Date()
+    for (const time of element.querySelectorAll<HTMLTimeElement>('.phone-status time')) {
+      time.dateTime = now.toISOString()
+      time.textContent = new Intl.DateTimeFormat([], { hour: 'numeric', minute: '2-digit' })
+        .formatToParts(now).filter(part => part.type !== 'dayPeriod').map(part => part.value).join('').trim()
+    }
+    for (const connection of element.querySelectorAll<HTMLElement>('.phone-connection')) {
+      connection.classList.toggle('is-offline', !navigator.onLine)
+      connection.title = navigator.onLine ? 'Browser reports a network connection. Cellular and battery symbols are illustrative.' : 'Browser reports no network connection. Cellular and battery symbols are illustrative.'
+      connection.setAttribute('aria-label', connection.title)
+    }
+  }
+  function applyPreferences(value: unknown) {
+    if (!value || typeof value !== 'object') return
+    const prefs = value as Record<string, unknown>
+    element.dataset.prefDark = String(prefs.darkMode === true)
+    element.dataset.largeText = String(prefs.largeText === true)
+    element.dataset.reduceMotion = String(prefs.reduceMotion === true)
+    const brightness = typeof prefs.brightness === 'number' && Number.isFinite(prefs.brightness)
+      ? Math.max(10, Math.min(100, prefs.brightness)) : 100
+    element.style.setProperty('--phone-dim', String(1 - brightness / 100))
+    element.dispatchEvent(new Event('phone-request-paint'))
+  }
+  function loadPreferences() {
+    try {
+      const saved: unknown = JSON.parse(localStorage.getItem('duo-system-settings') ?? 'null')
+      if (saved && typeof saved === 'object' && 'prefs' in saved) applyPreferences(saved.prefs)
+      else applyPreferences({})
+    } catch (error) {
+      console.error('Unable to load phone appearance preferences; saved data was not changed.', error)
+    }
+  }
+  window.addEventListener('duo:preferences-change', event => {
+    if (event instanceof CustomEvent) applyPreferences(event.detail)
+  })
+  window.addEventListener('storage', event => {
+    if (event.key === 'duo-system-settings' || event.key === null) loadPreferences()
+  })
+  document.addEventListener('visibilitychange', () => { syncActivation(); updateStatus() })
+  window.addEventListener('pagehide', deactivate)
+  window.addEventListener('pageshow', syncActivation)
+  window.addEventListener('online', updateStatus)
+  window.addEventListener('offline', updateStatus)
+  window.setInterval(() => { if (surfaceVisible && !document.hidden) updateStatus() }, 1000)
+  loadPreferences()
+  updateStatus()
 
   function openApp(app: PhoneApp) {
+    deactivate()
     let instance = instances.get(app.id)
     if (!instance) { instance = app.create(); instances.set(app.id, instance) }
     active = instance
@@ -76,6 +143,7 @@ export function createAppShell() {
     left.setAttribute('aria-label', `${app.name} navigation`)
     right.setAttribute('aria-label', app.name)
     homeButtons.forEach(button => { button.hidden = false })
+    syncActivation()
     const heading = instance.left.querySelector<HTMLElement>('h2') ?? instance.right.querySelector<HTMLElement>('h2')
     if (heading) {
       heading.tabIndex = -1
@@ -120,6 +188,7 @@ export function createAppShell() {
     input.focus({ preventScroll: true })
   }
   function showHome(focus = true) {
+    deactivate()
     active = null
     element.dataset.app = 'launcher'
     element.dataset.appearance = 'dark'
@@ -148,6 +217,14 @@ export function createAppShell() {
     }
   }
   homeButtons.forEach(button => button.addEventListener('click', () => showHome()))
+  element.addEventListener('duo:open-app', event => {
+    if (!(event instanceof CustomEvent) || typeof event.detail?.name !== 'string') return
+    const name = event.detail.name.trim().toLowerCase()
+    const app = apps.find(candidate => candidate.id === name || candidate.name.toLowerCase() === name)
+    if (!app) { console.error(`Phone app not found: ${event.detail.name}`); return }
+    event.preventDefault()
+    openApp(app)
+  })
   for (const name of ['pointerdown', 'pointerup', 'click', 'dblclick', 'wheel']) {
     element.addEventListener(name, event => {
       if ((name === 'pointerdown' || name === 'pointerup') && element.closest('canvas')?.dataset.navigationPan === 'true') return
@@ -161,5 +238,5 @@ export function createAppShell() {
     } else if (active?.onKey?.(event)) event.preventDefault()
   })
   showHome(false)
-  return { element, halves, showHome }
+  return { element, halves, showHome, setVisible }
 }

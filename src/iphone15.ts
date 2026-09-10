@@ -48,6 +48,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         <div id="scene" aria-label="Interactive 3D iPhone teardown"></div>
         <div class="part-caption" aria-live="polite"><span id="caption-number">001 / 015 PRO</span><h2 id="caption-title">Every part has a purpose.</h2><p id="caption-detail">Drag to orbit. Middle-drag or Space + drag to pan. Scroll to zoom. Click a component to inspect it on its own.</p></div>
         <div class="stage-tools">
+          <button class="apps-preview-toggle" type="button">Apps preview</button>
           <button class="shell-toggle" type="button" aria-pressed="false">Hide outer layers</button>
           <button class="reset-view" type="button">Reset view ↺</button>
         </div>
@@ -64,6 +65,26 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     </footer>
   </main>
 `
+
+let appsPreview: { open(): void } | undefined
+const appsButton = document.querySelector<HTMLButtonElement>('.apps-preview-toggle')!
+appsButton.addEventListener('click', async () => {
+  appsButton.disabled = true
+  try {
+    if (!appsPreview) {
+      const { createAppsPreview } = await import('./duo/apps/preview')
+      const notice = document.createElement('p')
+      notice.textContent = 'Interactive phone apps. This shared two-pane preview runs in your browser, not on the 15 Pro model display.'
+      appsPreview = createAppsPreview(undefined, notice)
+    }
+    appsPreview.open()
+  } catch (error) {
+    console.error('Unable to open phone apps.', error)
+    appsButton.textContent = 'Apps could not load. Retry'
+  } finally {
+    appsButton.disabled = false
+  }
+})
 
 const host = document.querySelector<HTMLDivElement>('#scene')!
 const scene = new THREE.Scene()

@@ -2,6 +2,8 @@ export interface AppInstance {
   left: HTMLElement
   right: HTMLElement
   onKey?(event: KeyboardEvent): boolean
+  onActivate?(): void
+  onDeactivate?(): void
 }
 
 export interface PhoneApp {

@@ -28,6 +28,10 @@ Click **Use apps** in the toolbar directly below the 3D phone (scroll down if ne
 
 The Home Screen includes all 42 apps, an eight-app dock, and working app search. Click either bottom home indicator or press **Escape** to return from an app. App instances remain mounted in memory when switching, preserving their current state.
 
+The [42-app survey and implementation plan](docs/app-plans/README.md) tracks real browser workflows, persistence, external-service handoffs, and remaining native iOS limitations. The **15 Pro** viewer also provides an **Apps preview** button for the same app library; it opens a shared two-pane HTML preview rather than drawing apps onto the 15 Pro model.
+
+Apps release foreground resources through activation/deactivation hooks when you switch apps, close the preview, hide the page, or hide the Duo display. Settings appearance controls affect the app interface only, not the host operating system. Browser-stored data is local to this site and browser profile; use app exports for backups.
+
 The interface targets iOS 26's app-specific typography, colors, iconography, lists, and controls without reproducing the Liquid Glass rendering effect. These are interactive HTML recreations, not iOS running in a simulator. The two-pane folding display is an adaptation rather than a pixel-identical layout from a shipping Apple device. Visual references include the [iPhone User Guide](https://support.apple.com/guide/iphone/welcome/ios), [Calculator](https://support.apple.com/guide/iphone/use-the-basic-calculator-iph1ac0b5cc/ios), and [Notes](https://support.apple.com/guide/iphone/get-started-with-notes-iph9e04f3be2/ios).
 
 If the browser does not expose all the required APIs, an alert above the viewer explains which Canary flags to enable and how to relaunch. The toolbar also says **Apps preview** instead. That button opens a regular HTML preview rather than rendering apps on the 3D screen. Confirm that you are using Canary, both flags are enabled, and the browser has been relaunched. These APIs are experimental and may change between browser versions.

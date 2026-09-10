@@ -15,7 +15,16 @@
   color-scheme: light;
 }
 .phone-software *, .phone-software *::before, .phone-software *::after { box-sizing: border-box; }
+.phone-software * { scrollbar-width: none; }
+.phone-software ::-webkit-scrollbar { display: none; }
 .phone-half { position: absolute; top: 0; width: 480px; height: 704px; background: var(--phone-wallpaper); background-size: 1000px 704px; }
+.phone-half::after { content: ''; position: absolute; inset: 0; z-index: 100; background: #000; opacity: var(--phone-dim, 0); pointer-events: none; border-radius: inherit; }
+.phone-software[data-pref-dark=true][data-appearance=light] .phone-half { filter: invert(1) hue-rotate(180deg); }
+.phone-software[data-pref-dark=true][data-appearance=light] :is(img, video, canvas, .app-icon) { filter: invert(1) hue-rotate(180deg); }
+.phone-software[data-pref-dark=true][data-appearance=light] .phone-half::after { background: #fff; }
+.phone-software[data-large-text=true]:not([data-app=launcher]) :is(.phone-left-content, .phone-right-content) > * { zoom: 1.08; width: calc(100% / 1.08); height: calc(100% / 1.08); }
+.phone-software[data-reduce-motion=true] *, .phone-software[data-reduce-motion=true] *::before, .phone-software[data-reduce-motion=true] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+.phone-connection { font-size: 12px; }
 .phone-left { left: 10px; background-position: -10px 0; }
 .phone-right { left: 510px; background-position: -510px 0; }
 .phone-software .phone-status {
@@ -27,6 +36,7 @@
 .phone-status > span { display: flex; align-items: center; gap: 5px; }
 .phone-signal { width: 19px; height: 13px; }
 .phone-wifi { width: 18px; height: 14px; }
+.phone-connection.is-offline .phone-wifi { opacity: .3; }
 .phone-software .phone-status .phone-battery { display: block; width: 28px; height: 14px; border: 0; border-radius: 0; background: none; box-shadow: none; }
 .phone-software[data-appearance=dark] .phone-status { color: #fff; }
 .phone-software button { font: inherit; cursor: pointer; touch-action: manipulation; }
@@ -34,6 +44,7 @@
 .phone-software input:focus-visible,
 .phone-software textarea:focus-visible,
 .phone-software select:focus-visible { outline: 3px solid #007aff; outline-offset: 2px; }
+.phone-software h2[tabindex="-1"]:focus { outline: none; }
 .phone-software [hidden] { display: none !important; }
 .phone-left-content, .phone-right-content { position: absolute; top: 54px; bottom: 28px; width: 100%; height: 622px; overflow: hidden; }
 .phone-software .phone-home {
