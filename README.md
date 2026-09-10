@@ -1,4 +1,4 @@
-# Phoneform Lab
+# iPhone Duo 3D
 
 Interactive 3D phone models built with Three.js and TypeScript, including a folding phone with HTML apps rendered onto its inner display.
 
